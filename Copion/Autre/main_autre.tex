@@ -1,0 +1,57 @@
+\section{Autres}
+\subsection{Décomposition en fractions unitaires}
+Ecrire $0<\frac{p}{q}<1$ sous forme de sommes de $\frac{1}{k}$
+\begin{lstlisting}
+void expandUnitFrac(long p, long q)
+{
+	if(p != 0)
+	{
+		long i = q % p == 0 ? q/p : q/p + 1;
+		System.out.println("1/" + i);
+		expandUnitFrac(p*i-q, q*i);
+	}
+}
+\end{lstlisting}
+\subsection{Combinaison}
+Nombre de combinaison de taille $k$ parmi $n$ ($C^k_n$)
+
+Cas spécial: $C^k_n\ mod\ 2 = n\oplus m$
+\begin{lstlisting}
+long C(int n, int k)
+{
+	double r = 1;
+	k = Math.min(k, n - k);
+	for(int i = 1; i <= k; i++)
+		r /= i;
+	for(int i = n; i >= n - k + 1; i--)
+		r *= i;
+	return Math.round(r);
+}
+\end{lstlisting}
+%TODO: Nombres de Catalan
+\subsection{Suite de fibonacci}
+$f(0) = 0$, $f(1) = 1$ et $f(n) = f(n – 1) + f(n - 2)$
+
+Valeur réelle mais avec des flottant: $f(n)=\frac{1}{\sqrt{5}}((\frac{1+\sqrt{5}}{2})^n-(-\frac{2}{1+\sqrt{5}})^n)$
+
+En fait, $f(n)$ est toujours l'entier le plus proche de $f_{approx}(n)=\frac{1}{\sqrt{5}}(\frac{1+\sqrt{5}}{2})^n$
+\begin{lstlisting}
+long fib(n)
+{
+	int i=1; int h=1; int j=0; int k=0; int t;
+	while(n > 0)
+	{
+		if(n % 2 == 1)
+		{
+			t = j * h;
+			j=i * h + j * k + t; 
+			i=i * k + t;
+    		}
+   		t = h * h;
+   		h = 2 * k * h + t;
+   		k = k * k + t;
+	}
+	n = (int)n / 2; 
+	return j;
+}
+\end{lstlisting}

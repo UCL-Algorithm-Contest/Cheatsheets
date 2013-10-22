@@ -1,0 +1,57 @@
+\subsection{BFS (Parcours en largeur)}
+Calcule à partir d'un graphe $g$ et d'un noeud $v$ un vecteur $d$ t.q. $d[u]$ réprésente le nombre d'arète min. à parcourir pour arrive au noeud $u$.
+
+$d[v]=0$, $d[u]=\infty$ si $u$ injoignable. Si $(u, w)\in E$ et $d[u]$ connu et $d[w]$ inconnu, alors $d[w] = d[u]+1$.\\
+
+\begin{lstlisting}
+int[] bfsVisit(LinkedList<Integer>[] g, int v, int c[]) //c is for connected components only
+{
+  Queue<Integer> Q = new LinkedList<Integer>();
+  Q.add(v);
+  int[] d = new int[g.length];
+  c[v]=v; //for connected components
+  Arrays.fill(d, Integer.MAX_VALUE);
+  // set distance to origin to 0
+  d[v] = 0;
+  while(!Q.isEmpty())
+  {
+    int cur = Q.poll();
+    // go over all neighboors of cur
+    for(int u : g[cur])
+    {
+      // if u is unvisited
+      if(d[u] == Integer.MAX_VALUE) //or c[u] == -1 if we calculate connected components 
+      {
+      	c[u] = v; //for connected components
+        Q.add(u);
+        // set the distance from v to u
+        d[u] = d[cur] + 1;
+      }
+    }
+  }
+  return d;
+}
+\end{lstlisting}
+\subsubsection{Composantes connexes}
+\begin{lstlisting}
+int[] bfs(LinkedList<Integer>[] g)
+{
+  int[] c = new int[g.length];
+  Arrays.fill(c, -1);
+  for(int v = 0; v < g.length; v++)
+    if(c[v] == -1)
+      bfsVisit(g, v, c);
+  return c;
+}
+\end{lstlisting}
+\subsubsection{Vérifier Biparticité (Bicolorabilité)} %TODO: verifier que ce mot existe x)
+\begin{lstlisting}
+boolean isBipartite(LinkedList<Integer>[] g)
+{
+  int[] d = bfs(g);
+  for(int u = 0; u < g.length; u++)
+    for(Integer v: g[u])
+      if((d[u]%2)!=(d[v]%2)) return false;
+  return true;
+}
+\end{lstlisting}

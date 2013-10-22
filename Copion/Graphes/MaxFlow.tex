@@ -1,0 +1,140 @@
+\subsection{Flux maximum}
+\subsubsection{Bases}
+On cherche à calculer le flux maximum d'une source $S$ à un puits $T$. Chaque arête à un débit maximum et un débit actuel (uniquement pendant la résolution). On construit le graphe résiduel comme sur les exemples.
+\begin{center}
+\begin{tikzpicture}
+\node[vertex] at (0, 0) (s) {\tiny $s$};
+\node[vertex] at (2, 1) (a) {\tiny $a$};
+\node[vertex] at (2, -1) (b) {\tiny $b$};
+\node[vertex] at (4, 1) (c) {\tiny $c$};
+\node[vertex] at (4, -1) (d) {\tiny $d$};
+\node[vertex] at (6, 0) (t) {\tiny $t$};
+\draw[->] (s) edge node[anchor = south] {\tiny $3 / 3$} (a);
+\draw[->] (s) edge node[anchor = north] {\tiny $0 / 2$} (b);
+\draw[->] (a) edge node[anchor = south] {\tiny $1 / 2$} (c);
+\draw[->] (a) edge node[anchor = south] {\tiny $1 / 3$} (d);
+\draw[->] (b) edge node[anchor = north] {\tiny $0 / 2$} (d);
+\draw[->] (c) edge node[anchor = south] {\tiny $1 / 2$} (t);
+\draw[->] (d) edge node[anchor = north] {\tiny $2 / 2$} (t);
+\node at (-2, 0) {flow graph};
+\end{tikzpicture}
+\end{center}
+
+\begin{center}
+\begin{tikzpicture}
+\node[vertex] at (0, 0) (s) {\tiny $s$};
+\node[vertex] at (2, 1) (a) {\tiny $a$};
+\node[vertex] at (2, -1) (b) {\tiny $b$};
+\node[vertex] at (4, 1) (c) {\tiny $c$};
+\node[vertex] at (4, -1) (d) {\tiny $d$};
+\node[vertex] at (6, 0) (t) {\tiny $t$};
+\draw[<-] (s) edge node[anchor = south] {\tiny $3$} (a);
+\draw[->] (s) edge node[anchor = north] {\tiny $2$} (b);
+\draw[->] (a) edge node[anchor = north] {\tiny $1$} (c);
+\draw[<-] (a) edge[bend left] node[anchor = south] {\tiny $1$} (c);
+\draw[<-] (a) edge[bend right] node[anchor = south] {\tiny $2$} (d);
+\draw[->] (a) edge node[anchor = south] {\tiny $1$} (d);
+\draw[->] (b) edge node[anchor = north] {\tiny $2$} (d);
+\draw[<-] (c) edge[bend left] node[anchor = south] {\tiny $1$} (t);
+\draw[->] (c) edge node[anchor = north] {\tiny $1$} (t);
+\draw[<-] (d) edge node[anchor = north] {\tiny $2$} (t);
+\node at (-2, 0) {residual graph};
+\end{tikzpicture}
+\end{center}
+L'algorithme de base fonctionne en cherchant un chemin de $S$ à $T$ dans le graphe résiduel.
+\subsubsection{Ford-Fulkerson}
+Si le chemin est cherché avec un DFS, la complexité est $O(|E|f^*)$ où $f^*$ est le flux maximum. On préferera pour les problèmes l'algorithme avec un BFS (Edmonds-Karps).
+\subsubsection{Edmonds-Karps (BFS)}
+Chemin cherché avec un BFS. On a $O(|V||E|^2)$.\\
+
+\begin{lstlisting}
+int maxFlow(HashMap<Integer, Integer>[] g, int s, int t)
+{
+  // output 0 for s = t (convention)
+  if(s == t) return 0;
+  // initialize maxflow
+  int maxFlow = 0;
+  // compute an augmenting path
+  LinkedList<Edge> path = findAugmentingPath(g, s, t);
+  // loop while augmenting paths exists and update g
+  while(path != null)
+  {
+    int pathCapacity = applyPath(g, path);
+    maxFlow += pathCapacity;
+    path = findAugmentingPath(g, s, t);
+  }
+  return maxFlow;
+}  
+
+LinkedList<Edge> findAugmentingPath(HashMap<Integer,Integer>[] g, int s, int t)
+{
+  // initialize the queue for BFS
+  Queue<Integer> Q = new LinkedList<Integer>();
+  Q.add(s);
+  // initialize the parent array for path reconstruction
+  Edge[] parent = new Edge[g.length];
+  Arrays.fill(parent, null);
+  // perform a BFS
+  while(!Q.isEmpty())
+  {
+    int cur = Q.poll();
+    for(Entry<Integer, Integer> e : g[cur].entrySet())
+    {
+      int next = e.getKey();
+      int w = e.getValue();
+      if(parent[next] == null)
+      {
+        Q.add(next);
+        parent[next] = new Edge(cur, next, w);
+      }
+    }
+  }
+  // reconstruct the path
+  if(parent[t] == null) return null;
+  LinkedList<Edge> path = new LinkedList<Edge>();
+  int cur = t;
+  while(cur != s)
+  {
+    path.add(parent[cur]);
+    cur = parent[cur].orig;
+  }
+  return path;
+}
+
+int applyPath(HashMap<Integer, Integer>[] g, LinkedList<Edge> path)
+{
+  int minCapacity = Integer.MAX_VALUE;
+  for(Edge e : path)
+    minCapacity = Math.min(minCapacity, e.w);
+  for(Edge e : path)
+  {
+    // treat path edge
+    if(minCapacity == e.w)
+    {
+      // the capacity became 0, remove edge
+      g[e.orig].remove(e.dest);
+    }
+    else
+    {
+      // there remains capacity, update capacity
+      g[e.orig].put(e.dest, e.w - minCapacity);
+    }
+    // treat back edge
+    Integer backCapacity = g[e.dest].get(e.orig);
+    if(backCapacity == null)
+    { 
+      // the back edge does not exist yet
+      g[e.dest].put(e.orig, minCapacity);
+    }
+    else
+    {
+      // the back edge already exists, update capacity
+      g[e.dest].put(e.orig, backCapacity+minCapacity);
+    }
+  }
+  return minCapacity;
+}
+\end{lstlisting}
+\subsubsection{Coupe minimale}
+On cherche, avec deux noeuds $s$ et $t$, $V_1$ et $V_2$ tel que $s\in V_1$, $t\in V_2$ et $\sum_{e \in E(V_1, V_2)} w(e)$ minimum.\\
+Il suffit de calculer le flot maximum entre $s$ et $t$ et d'appliquer un parcours du graphe résiduel depuis $s$(BFS par exemple). Tout les noeuds ainsi parcourus sont dans $V_1$, les autres dans $V_2$. Le poids de la coupe est le flot maximum.

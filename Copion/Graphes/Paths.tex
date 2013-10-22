@@ -1,0 +1,85 @@
+\subsection{Dijksta}
+Plus court chemin d'un noeud $v$ à tout les autres. Le graphe doit être sans cycles de poids négatif.\\
+
+\begin{lstlisting}
+double[] dijkstra(LinkedList<Edge>[] g, int v)
+{
+  double[] d = new double[g.length];
+  Arrays.fill(d, Double.POSITIVE_INFINITY);
+  // initialize distance to v and the priority queue
+  d[v] = 0;
+  PriorityQueue<Edge> PQ = new PriorityQueue<Edge>();
+  for(Edge e : g[v])
+    PQ.add(e);
+  while(!PQ.isEmpty())
+  {
+    // poll minimum edge from PQ
+    Edge minE = PQ.poll();
+    if(d[minE.dest] == Double.POSITIVE_INFINITY)
+    {
+      // set the distance to the new found endpoint
+      d[minE.dest] = minE.w;
+      for(Edge e : g[minE.dest])
+      {
+        // add to the queue all edges leaving the new
+        // endpoint with the increased weight
+        if(d[e.dest] == Double.POSITIVE_INFINITY)
+          PQ.add(new Edge(e.orig, e.dest, e.w + d[e.orig]));
+      }
+    }
+  }
+  return d;
+}
+\end{lstlisting}
+\subsection{Bellman-Ford\label{BellmanFord}}
+Plus court chemin d'un noeud $v$ à tout les autres. Le graphe peut avoir des cycles de poids négatif, mais alors l'algorithme ne retourne pas les chemins les plus courts, mais retourne l'existence de tels cycles.\\
+$d[i][u] = \text{shortest path from $v$ to $u$ with $\leq i$ edge}$\\
+$d[0][v] = 0$ \\
+$d[0][u] = \infty \quad \text{for $u \neq v$}$\\
+$d[i][u] = \min \{ 
+d[i - 1][u], \quad
+\min_{(s, u) \in E} d[i - 1][s] + w(s, u) \}$\\
+Si pas de cycle, la solution est dans $d[|V|-1]$. Si cycle il y a, $d[|V|-1]=d[V]$.\\
+$O(|V||E|)$.\\
+
+\begin{lstlisting}
+double[] bellmanFord(LinkedList<Edge>[] gt, int v)
+{
+  int n = gt.length;
+  double[][] d = new double[n][n];
+  for(int u = 0; u < n; u++)
+    d[0][u] = u == v ? 0 : Double.POSITIVE_INFINITY;
+  for(int i = 1; i < n; i++)
+  {
+    for(int u = 0; u < n; u++)
+    {
+      double min = d[i - 1][u];
+      for(Edge e : gt[u])
+        min = Math.min(min, d[i - 1][e.dest] + e.w);
+      d[i][u] = min;
+    }
+  }
+  return d[n - 1];
+}
+\end{lstlisting}
+\subsection{Floyd-Warshall}
+Plus court chemin de tout les noeuds à tout les autres. Prend en argument la matrice d'adjacence. $O(|V|^3)$ en temps et $O(|V|^2)$ en mémoire.\\
+Le graphe contient des cycles de poids négatif ssi $result[v][v]<0$.\\
+
+\begin{lstlisting}
+double[][] floydWarshall(double[][] A)
+{
+  int n = A.length;
+  // initialization: base case
+  double[][] d = new double[n][n];
+  for(int v = 0; v < n; v++)
+    for(int u = 0; u < n; u++)
+      d[v][u] = A[v][u];
+
+  for(int k = 0; k < n; k++)
+    for(int v = 0; v < n; v++)
+      for(int u = 0; u < n; u++)
+        d[v][u] = Math.min(d[v][u], d[v][k] + d[k][u]);
+  return d;
+}
+\end{lstlisting}

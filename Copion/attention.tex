@@ -1,0 +1,21 @@
+\section{Remarques}
+\subsection{Attention!}
+\begin{enumerate}
+	\item Lire \textbf{TOUS} les énoncés avant de commencer la moindre implémentation
+	\item Faire attention au copier-coller bête et méchant.
+	\item Surveiller les overflow. Parfois, un long peux régler pas mal de problèmes
+\end{enumerate}
+ 
+\subsection{Opérations sur les bits}
+\begin{enumerate}
+	\item Vérification parité de $n$: \lstinline{(n & 1) == 0}
+	\item $2^n$: \lstinline|1 << n|.
+	\item Tester si le $i$ème bit de $n$ est $0$: \lstinline{(n & 1 << i) != 0}
+	\item Mettre le $i$ème bit de $n$ à 0: \lstinline{n &= ~(1 << i)}
+	\item Mettre le $i$ème bit de $n$ à 1: \lstinline{n |= (1 << i)}
+	\item Union: \lstinline{a | b}
+	\item Intersection: \lstinline{a & b}
+	\item Soustraction bits: \lstinline{a & ~b}
+	\item Vérifier si $n$ est une puissance de 2: \lstinline{(x & (x-1) == 0)}
+	\item Passage au négatif: \lstinline{0x7fffffff^n}
+\end{enumerate}

@@ -1,0 +1,110 @@
+\subsection{DFS (Parcours en profondeur)}
+Soit $=$ BFS avec \textit{Stack} à la place de \textit{Queue} ou implémentation récursive hyper-simple. Complexité $O(|V|+|E|)$\\
+
+\begin{lstlisting}
+int UNVISITED = 0, OPEN = 1, CLOSED = 2;
+boolean cycle; // true iff there is a cycle
+
+void dfsVisit(LinkedList<Integer>[] g, int v,int[] label)
+{
+  label[v] = OPEN;
+  for(int u : g[v])
+  {
+    if(label[u] == UNVISITED)
+      dfsVisit(g, u, label);	
+    if(label[u] == OPEN)
+      cycle = true;
+  }
+  label[v] = CLOSED;
+}
+
+void dfs(LinkedList<Integer>[] g)
+{
+  int[] label = new int[g.length];
+  Arrays.fill(label, UNVISITED);
+  cycle = false;
+  for(int v = 0; v < g.length; v++)
+    if(label[v] == UNVISITED)
+      dfsVisit(g, v, label);
+}
+\end{lstlisting}
+\subsubsection{Ordre topologique}
+\begin{center}
+\begin{tikzpicture}[scale = 0.8]
+	\begin{scope}[xshift=-100]
+	  \node[vertex] (n0) at (0, 0) {0};
+	  \node[vertex] (n1) at (1, 0) {1};
+	  \node[vertex] (n2) at (0, -1) {2};
+	  \node[vertex] (n3) at (1, -1) {3};
+	  \node[vertex] (n4) at (2, -1) {4};
+	  \draw[->] (n0) -- (n1);
+	  \draw[->] (n0) -- (n2);
+	  \draw[->] (n2) -- (n3);
+	  \draw[->] (n1) -- (n3);
+	  \draw[->] (n3) -- (n4);
+	\end{scope}
+	
+	\begin{scope}
+		\draw[->, anchor=south] (-0.5,-0.5) -- (1,-0.5) node{topological sort} -- (2.5,-0.5);
+	\end{scope}
+	
+	\begin{scope}[xshift=100]
+	  \node[vertex] (n0) at (0, -0.5) {0};
+	  \node[vertex] (n1) at (1, -0.5) {1};
+	  \node[vertex] (n2) at (2, -0.5) {2};
+	  \node[vertex] (n3) at (3, -0.5) {3};
+	  \node[vertex] (n4) at (4, -0.5) {4};
+	  \draw[->] (n0) -- (n1);
+	  \draw[->] (n0) .. controls (1,-1) .. (n2);
+	  \draw[->] (n2) -- (n3);
+	  \draw[->] (n1) .. controls (2,0) .. (n3);
+	  \draw[->] (n3) -- (n4);
+	\end{scope}
+\end{tikzpicture}
+\end{center}
+Le graphe doit être acyclique. On modifie légèrement DFS:\\
+
+\begin{lstlisting}
+Stack<Integer> toposort; // add stack to global variables
+/* ... */
+void dfs(LinkedList<Integer>[] g)
+{
+  /* ... */
+  toposort = new Stack<Integer>();
+  for(int v = 0; v < g.length; v++) { /* ... */ }
+}
+
+void dfsVisit(LinkedList<Integer>[] g, int v,int[] label)
+{
+  /* ... */
+  toposort.push(v); // push vertex when closing it
+  label[v] = CLOSED;
+}
+\end{lstlisting}
+\subsubsection{Composantes fortement connectées}
+Calculer l'ordre topologique du graphe avec les arêtes inversées, puis exécuter un BFS dans l'ordre topologique (et sans repasser par un nœud déjà fait). Les nœuds parcourus à chaque execution du BFS sont fortement connectés.
+\begin{lstlisting}
+int[] scc(LinkedList<Integer>[] g)
+{
+  // compute the reverse graph
+  LinkedList<Integer>[] gt = transpose(g);
+  // compute ordering
+  dfs(gt);
+  // !! last position will contain the number of scc's
+  int[] scc = new int[g.length + 1];
+  Arrays.fill(scc, -1);
+  int nbComponents = 0;
+  // simulate bfs loop but in toposort ordering
+  while(!toposort.isEmpty())
+  {
+    int v = toposort.pop();
+    if(scc[v] == -1)
+    {
+      nbComponents++;
+      bfsVisit(g, v, scc);
+    }
+  }
+  scc[g.length] = nbComponents;
+  return scc;
+}
+\end{lstlisting}
