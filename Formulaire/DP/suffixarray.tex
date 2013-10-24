@@ -1,0 +1,116 @@
+\subsection{Suffix array}
+\begin{itemize}
+\item Suffix array de $algorithm$ = tableau trié des suffixes. Exemple :algorithm, gorithm, hm, ithm, lgorithm, m, orithm, rithm, thm
+
+\item Caractérisé par son index de départ\\
+Exemple : Suffix array de $algorithm$: $[0, \ 2, \ 7, \ 5, \ 1, \ 8, \ 3, \ 4, \ 6]$\\
+Exemple : Soit $suf_j$ le suffixe commençant à l'index $j$. Soit $C(i, j, k)$ le résultat de la comparaison de $suf_j$ et $suf_k$ sur les $2^i$ premiers caractères.
+\begin{align*}
+C(i, j, k) = & \ C(i - 1, j, k) \hspace{15pt} \text{si $C(i - 1, j, k) \neq 0$} \\
+             & \ C(i - 1, j + 2^{i - 1}, k + 2^{i - 1}) \hspace{15pt} \text{sinon}
+\end{align*}
+
+\end{itemize}
+\begin{itemize}
+
+\item On définit une matrice $so$ telle que:
+\begin{align*}
+so[i][j] = so[i][k] & \Leftrightarrow C(i, j, k) = 0 \\
+so[i][j] < so[i][k] & \Leftrightarrow C(i, j, k) < 0 \\
+so[i][j] > so[i][k] & \Leftrightarrow C(i, j, k) > 0 
+\end{align*}
+
+$so[i]$ est l'ordre des suffixes triés sur les $2^i$ premiers caractères.
+
+\end{itemize}
+
+\begin{itemize}
+
+\item\textbf{Cas de base : }$so[0][j] = (int)s.charAt(i) $\\
+Exemple: pour $s = ccacab$ on a \\$ s[0] = [97, 97, 95, 97, 95, 96]$
+\item Pour chaque $j$ on définit un triplet $(l, r, j)$:
+\begin{align*}
+(s[i - 1][j], s[i - 1][j + 2^{i - 1}], j) & \quad \text{si $j + 2^{i - 1} < n$} \\
+(s[i - 1][j], -1, j) & \quad \text{si $j + 2^{i - 1} \geq n$}
+\end{align*}
+
+\end{itemize}
+\ \newline
+\begin{lstlisting}
+class Triple implements Comparable<Triple> {
+  int l, r, index;
+  public Triple(int half1, int half2, int index) {
+    this.l = half1;
+    this.r = half2;
+    this.index = index;
+  };
+  public int compareTo(Triple other) {
+    if(l != other.l) {
+      return l - other.l;
+    }
+    return r - other.r;
+  }
+} 
+\end{lstlisting}
+\ \newline
+\begin{lstlisting}
+int[][] suffixOrder(String s) {
+  int n = s.length();
+  int lg = (int)Math.ceil((Math.log(n) / Math.log(2))) + 1;
+  int[][] so = new int[lg][n];
+  // initialize so[0] with character order
+  for(int i = 0; i < n; i++) {
+    so[0][i] = s.charAt(i);
+  }
+  Triple[] next = new Triple[n];
+  for(int i = 1; i < lg; i++) {
+    // build the next array
+    for(int j = 0; j < n; j++) {
+      int k = j + (1 << (i - 1));
+      next[j] = new Triple(so[i - 1][j], k < n ? so[i - 1][k] : -1, j);
+    }
+    // sort next array
+    Arrays.sort(next);
+    // build so[i]
+    for(int j = 0; j < n; j++) {
+      if(j == 0) {
+      // smallest elements gets value 0 
+      so[i][next[j].index] = 0;
+     } else if(next[j].compareTo(next[j - 1]) == 0) {
+      // equal to previous so it gets the same value
+      so[i][next[j].index] = so[i][next[j - 1].index];
+     } else {
+      // largest than previous so get + 1
+      so[i][next[j].index] = so[i][next[j - 1].index] + 1;
+     }
+   }
+ }
+ return so;
+}
+\end{lstlisting}
+
+Calcule le Suffix Array pour un $so$ donné:\ \newline
+\begin{lstlisting}
+int[] suffixArray(int[][] so) {
+  int[] sa = new int[so[0].length];
+  for(int j = 0; j < so[0].length; j++) {
+    sa[so[so.length - 1][j]] = j;
+  }
+  return sa;
+}
+\end{lstlisting}
+
+Retourne le plus long préfixe commun de $suf_j$ et $suf_k$ pour un $so$ donné:\ \newline
+\begin{lstlisting}
+int lcp(int[][] so, int j, int k) {
+  int lcp = 0;
+  for(int i = so.length - 1; i >= 0; i--) {
+    if(so[i][j] == so[i][k]) {
+      lcp += (1 << i);
+      j += (1 << i);
+      k += (1 << i);
+    }
+  }
+  return lcp;
+}
+\end{lstlisting}

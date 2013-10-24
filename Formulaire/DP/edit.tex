@@ -1,0 +1,47 @@
+\subsection{Edit distance}
+On a deux String $x$ et $y$, en effectuant des opérations sur $x$, on veut obtenir le coût minimum pour transformer $x$ en $y$.
+
+On peut (coût opération):
+\begin{enumerate}
+ \item Enlever un caractère (D=1)
+ \item Insérer un caractère (I=1)
+ \item Remplacer un caractère (R=2)
+\end{enumerate}
+
+\begin{itemize}
+ \item \textbf{Formulation}:$
+ editDist[i][j] $= coût min. pour transformer $x_0 \cdots x_{i - 1}$ en $y_0 \cdots y_{j - 1}$
+ \item \textbf{Cas de base}: \\$ editDist[i][0] = i \cdot I \hspace{15pt}
+ editDist[0][j] = j \cdot I$
+ \item \textbf{Autres cas}:
+ \begin{align*}
+ editDist[i][j] = \min  \quad  & editDist[i - 1][j] + D, \\
+                               & editDist[i][j - 1] + I, \\
+                               & editDist[i - 1][j - 1] + R^*
+ \end{align*}
+ où $R^* = R$ si $x[i-1] \neq y[j-1]$ et $0$ sinon.
+\end{itemize}
+\ \newline
+\begin{lstlisting}
+int dlDistance(String txt1, String txt2){
+        int[][] d = new int[txt1.length()+1][txt2.length()+1];
+        for(int i=0; i <= txt1.length(); i++)
+            d[i][0]=i;
+        for(int j=0; j <= txt2.length(); j++)
+            d[0][j]=j;
+        for(int i=1; i <= txt1.length(); i++){
+            for(int j=1; j <= txt2.length(); j++){
+                int cost;
+                // Evaluation du cout de non-egalite d'un caractere
+                if(txt1.charAt(i-1)==txt2.charAt(j-1)) cost = 0;
+                else cost = 2;
+                
+                // Suppression, insertion, substitution
+                d[i][j] = Math.min(Math.min(d[i-1][j] + 1, d[i][j-1] + 1), d[i-1][j-1] + cost);
+            }
+        }
+        
+        // Le dernier element calcule est la distance
+        return d[txt1.length()][txt2.length()];
+    }
+\end{lstlisting}

@@ -1,0 +1,51 @@
+\subsection{Matrix Chain Multiplication (MCM)}
+Soit une liste de matrices, trouver l'ordre qui minimise le nombres de multiplications pour calculer leur produit.
+
+\begin{itemize}
+ \item Nombre pour multiplier une matrice $n \times m$ par une $m \times r$ : $n \cdot m \cdot r$.
+
+ \item Exemple: $A$ : $10 \times 30$, $B$ : $30 \times 5$ et $C$ : $5 \times 60$.
+ \begin{itemize}
+ \item Pour $(AB)C$ : $10 \cdot 30 \cdot 5 + 10 \cdot 5 \cdot 60 = 4500$ multiplications;
+ \item Pour $A(BC)$ : $30 \cdot 5 \cdot 60 + 10 \cdot 30 \cdot 60 = 27000$ multiplications.
+  \end{itemize}
+\end{itemize}
+
+\begin{itemize}
+ \item \textbf{Formulation :}
+ $best[i][j] =$ min cost to multiply $A_i, \ldots, A_j$
+ \item \textbf{Cas de base :} $best[i][i] = 0 $
+ \item \textbf{Autres cas:}
+ \begin{align*}
+ best[i][j] = \min_{i \leq k < j} best[i][k] & + best[k + 1][j] \\
+                                             & + A_i.n_1 \times A_k.n_2 \times A_j.n_2
+ \end{align*}
+\end{itemize}
+
+\subsection{MCM généralisé}
+Soit une liste d'objets $x[0], \ldots, x[n - 1]$ et une opération $\odot$ avec un coût associé, trouver l'ordre dans lequel effectuer les opérations pour minimiser le coût total. La multiplication des matrices est remplacée par $\odot$.
+
+$$ best[i][j] = \min_{i \leq k < j} best[i][k] + best[k + 1][j] + cost(i, j, k)$$
+
+$cost(i, j, k)$ est le coût de $(x[i] {\color{gray} \odot} \cdots {\color{gray} \odot} x[k]) {\color{blue} \mathbf{\odot}} (x[k + 1] {\color{gray} \odot} {\color{gray} \cdots} {\color{gray} \odot} x[j])$.
+\newline
+\begin{lstlisting}
+int bestParenthesize() {
+  int n = x.length; // x is a global variable
+  int[][] best = new int[n][n];
+  for(int i = 0; i < n; i++) { 
+    best[i][i] = 0;
+  }
+  for(int l = 1; l <= n; l++) {
+    for(int i = 0; i < n - l; i++) {
+      int j = i + l;
+      int min = Integer.MAX_VALUE;
+      for(int k = i; k < j; k++) {
+        min = Math.min(min, best[i][k] + best[k + 1][j] + cost(i, j, k)); // cost is problem-independent
+      }
+      best[i][j] = min;
+    }
+  }
+  return best[0][n - 1];
+} 
+\end{lstlisting}
