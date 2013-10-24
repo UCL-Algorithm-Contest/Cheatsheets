@@ -1,5 +1,87 @@
 \section{Autres}
-\subsection{Décomposition en fractions unitaires}
+\subsection[Permutations, Combinaisons, Arrangements, ...]{Permutations, Combinaisons, Arrangements... $\beta$}
+\begin{lstlisting}
+void nextPerm(int[] p) {
+  int n = p.length;
+  int k = n - 2;
+  while(k >= 0 && p[k] >= p[k + 1]) {k--;}
+  int l = n - 1;
+  while(p[k] >= p[l]) {l--;}
+  swap(p, k, l);
+  reverse(p, k + 1, n);
+}
+
+LinkedList<Integer> getIPermutation(int n, int index) {
+  LeftRightArray lr = new LeftRightArray(n);
+  lr.freeAll();
+  LinkedList<Integer> perm = new 
+  LinkedList<Integer>();
+  getPermutation(lr, index, fact(n), perm);
+  return perm;
+}
+
+void getPermutation(LeftRightArray lr, int i, long fact, LinkedList<Integer> perm) {
+  int n = lr.size();
+  if(n == 1) {
+    perm.add(lr.freeIndex(0, false));
+  } else {
+    fact /= n;
+    int j = (int)(i / fact);
+    perm.add(lr.freeIndex(j, true));
+    i -= j * fact;
+    getPermutation(lr, i, fact, perm);
+  }
+}
+
+int[] getICombinadic(int n, int k, long i) { 
+  int[] comb = new int[k];
+  int j = 0;
+  for(int z = 1; z <= n; z++) {
+    if ( k == 0 ) {
+      break;
+    }
+    long threshold = C(n - z, k - 1);
+    if (i < threshold) {
+      comb[j] = z - 1;
+      j++;
+      k = k - 1;
+    } else if (i >= threshold) {
+      i = i - threshold;
+    }
+  }
+  return comb;
+}
+
+void combinations(int n, int k) {
+  combinations(n, 0, new int[k], 0);
+}
+
+void combinations(int n, int j, int[] comb, int k) {
+  if(k == comb.length) {
+    System.out.println(Arrays.toString(comb));
+  } else {
+    for(int i = j; i < n; i++) {
+      comb[k] = i;
+      combinations(n, i + 1, comb, k + 1);
+    }
+  }
+}
+void subsets(int[] set) {
+  int n = (1 << set.length);
+  for(int i = 0; i < n; i++) {
+    int[] sub = new int[Integer.bitCount(i)];
+    int k = 0, j = 0;
+    while((1 << j) <= i) {
+      if((i & (1 << j)) == (1 << j)) {
+        sub[k++] = set[j];
+      }
+      j++;  
+    }
+    System.out.println(Arrays.toString(sub));
+  }
+}
+\end{lstlisting}
+\subsection[Décomposition en fractions unitaires]{Décomposition en fractions unitaires $\beta$}
 Ecrire $0<\frac{p}{q}<1$ sous forme de sommes de $\frac{1}{k}$
 \begin{lstlisting}
 void expandUnitFrac(long p, long q)
@@ -29,7 +111,7 @@ long C(int n, int k)
 }
 \end{lstlisting}
 %TODO: Nombres de Catalan
-\subsection{Suite de fibonacci}
+\subsection[Suite de fibonacci]{Suite de fibonacci $\beta$}
 $f(0) = 0$, $f(1) = 1$ et $f(n) = f(n – 1) + f(n - 2)$
 
 Valeur réelle mais avec des flottant: $f(n)=\frac{1}{\sqrt{5}}((\frac{1+\sqrt{5}}{2})^n-(-\frac{2}{1+\sqrt{5}})^n)$
