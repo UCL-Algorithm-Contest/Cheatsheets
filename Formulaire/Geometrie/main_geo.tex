@@ -5,7 +5,7 @@ boolean eq(double a, double b){ return Math.abs(a - b) <= E; }
 boolean le(double a, double b) { return a < b - E; }
 boolean leq(double a, double b) { return a <= b + E; }
 \end{lstlisting}
-\subsection[Points]{Points $\beta$}
+\subsection{Points {\footnotesize \textit{non-testé}}}
 \begin{lstlisting}
 public static class Point
 {
@@ -27,7 +27,7 @@ class horizontalComp implements Comparator<Point>
   }
 }
 \end{lstlisting}
-\subsubsection[Ordonner selon angle]{Ordonner selon angle $\beta$}
+\subsubsection{Ordonner selon angle {\footnotesize \textit{non-testé}}}
 \begin{lstlisting}
 LinkedList<Point> sortPolar(Point[] P, Point o)
 {
@@ -83,7 +83,7 @@ class PolarComp implements Comparator<Point>
   }
 }
 \end{lstlisting}
-\subsubsection[Paire de points la plus proche]{Paire de points la plus proche  $\beta$}
+\subsubsection{Paire de points la plus proche {\footnotesize \textit{non-testé}}}
 \begin{lstlisting}
 double closestPair(Point[] points)
 {
@@ -115,7 +115,7 @@ double closestPair(Point[] points)
   return min;
 }
 \end{lstlisting}
-\subsection[Lignes]{Lignes $\beta$}
+\subsection{Lignes {\footnotesize \textit{non-testé}}}
 \begin{lstlisting}
 class Line
 {
@@ -208,7 +208,7 @@ boolean isHorizontal(Line l) {
   return eq(l.a, 0);
 }
 \end{lstlisting}
-\subsection[Segments]{Segments $\beta$}
+\subsection{Segments {\footnotesize \textit{non-testé}}}
 \begin{lstlisting}
 boolean onSegment(Segment s, Point p) {
   return Math.min(s.p1.x, s.p2.x) <= p.x &&
@@ -342,7 +342,7 @@ public static int positionFromSegment(Point segmentFrom, Point segmentTo, Point 
   return (segmentTo.x-segmentFrom.x)*(p.y-segmentFrom.y)-(segmentTo.y-segmentFrom.y)*(p.x-segmentFrom.x);
 }
 \end{lstlisting}
-\subsection[Triangles]{Triangles $\beta$}
+\subsection{Triangles {\footnotesize \textit{non-testé}}}
 Loi des sinus:$\frac{a}{\sin(A)}=\frac{b}{\sin(B)}=\frac{c}{\sin(C)}=2r$
 Loi des cosinus:\\
 $a^2 = b^2 + c^2 – 2bc\cos(A)$\\
@@ -416,7 +416,7 @@ boolean collinear(Point a, Point b, Point c)
          new Triangle(a, b, c))) <= E;
 }
 \end{lstlisting}
-\subsection[Cercles]{Cercles $\beta$}
+\subsection{Cercles {\footnotesize \textit{non-testé}}}
 Aire de l'intersection entre deux cercles de rayon $r$ et $R$ à une distance $d$:
 $A = r^2\arccos(X) + R^2 \arccos(Y) - \frac{\sqrt(Z)}{2}$\\
 $X = \frac{d^2+r^2-R^2}{2dr}$\\
@@ -484,7 +484,7 @@ Point[] tangentPoints(Point p, Circle c)
                       new Point(x2, y2)};
 }
 \end{lstlisting}
-\subsection[Polygones]{Polygones $\beta$}
+\subsection{Polygones {\footnotesize \textit{non-testé}}}
 %TODO: Vérification fonction ear.
 \begin{lstlisting}
 boolean turnSameSide(Point[] polygon)
@@ -582,7 +582,7 @@ public static List<Point> giftWrapping(ArrayList<Point> points)
   return result;
 }
 \end{lstlisting}
-\subsubsection[Polygone convexe: Graham Scan]{Polygone convexe: Graham Scan  $\beta$}
+\subsubsection{Polygone convexe: Graham Scan {\footnotesize \textit{non-testé}}}
 Meilleure complexité (théoriquement)
 \begin{lstlisting}
 static Point firstP;

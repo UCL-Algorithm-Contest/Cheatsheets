@@ -1,5 +1,5 @@
 \section{Autres}
-\subsection[Permutations, Combinaisons, Arrangements, ...]{Permutations, Combinaisons, Arrangements... $\beta$}
+\subsection{Permutations, Combinaisons, Arrangements... {\footnotesize \textit{non-testé}}}
 \begin{lstlisting}
 void nextPerm(int[] p) {
   int n = p.length;
@@ -81,7 +81,7 @@ void subsets(int[] set) {
   }
 }
 \end{lstlisting}
-\subsection[Décomposition en fractions unitaires]{Décomposition en fractions unitaires $\beta$}
+\subsection{Décomposition en fractions unitaires {\footnotesize \textit{non-testé}}}
 Ecrire $0<\frac{p}{q}<1$ sous forme de sommes de $\frac{1}{k}$
 \begin{lstlisting}
 void expandUnitFrac(long p, long q)
@@ -111,8 +111,8 @@ long C(int n, int k)
 }
 \end{lstlisting}
 %TODO: Nombres de Catalan
-\subsection[Suite de fibonacci]{Suite de fibonacci $\beta$}
-$f(0) = 0$, $f(1) = 1$ et $f(n) = f(n – 1) + f(n - 2)$
+\subsection{Suite de fibonacci {\footnotesize \textit{non-testé}}}
+$f(0) = 0$, $f(1) = 1$ et $f(n) = f(n - 1) + f(n - 2)$
 
 Valeur réelle mais avec des flottant: $f(n)=\frac{1}{\sqrt{5}}((\frac{1+\sqrt{5}}{2})^n-(-\frac{2}{1+\sqrt{5}})^n)$
 
@@ -135,5 +135,406 @@ long fib(n)
 	}
 	n = (int)n / 2; 
 	return j;
+}
+\end{lstlisting}
+\subsection[Strings]{Strings $\beta\beta$}
+\textbf{Non-relu}
+\begin{lstlisting}
+int[] suffixArray(int[][] P) {
+  int[] SA = new int[P[0].length];
+  for(int i = 0; i < SA.length; i++) {
+    SA[P[P.length - 1][i]] = i;
+  }
+  return SA;
+}
+//O(n * log(n)), lcp[i] = lcp(SA[i - 1], SA[i]) 
+int[] lcpArray(int[] SA, int[][] P) {
+  int[] lcp = new int[SA.length]; 
+  for(int i = 1; i < SA.length; i++) {
+    lcp[i] = lcp(P, SA[i-1], SA[i]);
+  }
+  return lcp;
+}	
+//O(log(n)), calcula lcp entre S[x...n], S[y...n]
+//lcp(SA[i],SA[j]) = min(lcp(SA[i], SA[i+1]), ... , lcp(SA[j-1], S A[j])) =>  RMQ pode reduzir a O(1)
+static int lcp(int[][] P, int x, int y) { 
+  int N = P[0].length;
+  int M = P.length;
+  if(x == y) {return N - x;}
+  int lcp = 0;
+  for(int k=M-1; k>=0 && x < N && y < N; k--) {
+    if (P[k][x] == P[k][y]) {
+      x += 1 << k;
+      y += 1 << k;
+      lcp += 1 << k;
+    }
+  }
+  return lcp;
+}
+//O(n * log(n)^2), calcula a matriz P
+static int[][] buildP(String s) {
+  int N = s.length();
+  int log = N == 1 ? 2 : ((int)(Math.log(N-1) / 
+                              Math.log(2))) + 3; 
+  int[][] P = new int[log][N];
+  for (int i = 0; i < N; i++) {
+    P[0][i] = s.charAt(i) - 'a';
+  }
+  Entry[] L = new Entry[N];
+  int stp = 1;
+  for (int cnt = 1; (cnt >> 1) < N; cnt <<= 1) {
+    for (int i = 0; i < N; i++)  {
+      L[i] = new Entry(P[stp - 1][i], 
+                      (i + cnt) < N ? 
+                       P[stp-1][i+cnt] : -1, i);
+    }
+    Arrays.sort(L); // Acelera-se usando O(n)
+    for (int i = 0; i < N; i ++) {
+      P[stp][L[i].p] = i > 0 && 
+      L[i].nr0 == L[i - 1].nr0 && 
+      L[i].nr1 == L[i - 1].nr1 ? 
+      P[stp][L[i - 1].p] : i;
+    }
+    stp++;
+  }
+  return P;
+}
+
+class Entry implements Comparable<Entry>{
+  int nr0, nr1, p;
+  public Entry(int nr0, int nr1, int p) {
+    this.nr0 = nr0;
+    this.nr1 = nr1;
+    this.p = p;            
+  }
+  public int compareTo(Entry o) {
+    if (nr0 != o.nr0) {
+      return nr0 < o.nr0 ? -1 : 1;
+    }
+    if (nr1 != o.nr1) {
+      return nr1 < o.nr1 ? -1 : 1;
+    }
+    return 0;
+  }
+}
+
+String maxStrRepeatedKTimes(String s, int k) {
+  int[][] P = buildP(s);
+  int[] SA = suffixArray(P);
+  int n = s.length();
+  int max = Integer.MIN_VALUE;
+  int j = 0;
+  for(int i = 0; i <= n - k; i++) {
+    int lcp = lcp(P, SA[i], SA[i + k - 1]);
+    if(lcp > max) {
+      max = lcp;
+      j = SA[i];
+    }
+  }
+  return s.substring(j, j + max);
+}
+	
+String minLexicographicRotation(String s) {
+  int n = s.length();
+  s += s;
+  int[][] P = buildP(s);
+  int[] SA = suffixArray(P);
+  int i = 0;
+  while(!(0 <= SA[i] && SA[i] < n)) {
+    i++;
+  }
+  return s.substring(SA[i], SA[i] + n);
+}
+
+class MaxLexConc implements Comparator<String> {
+ public int compare(String x, String y) {
+    String xy = x + y;
+    String yx = y + x;
+    if(xy.compareTo(yx) < 0 || 
+      (xy.equals(yx) && x.length()<y.length())) {
+      return 1; 
+    }
+    return -1; 
+  } // menor: basta trocar -1 e 1
+}
+\end{lstlisting}
+\subsubsection{Palyndrome maximum}
+\begin{lstlisting}
+int[] calculateAtCenters(String s) {
+  int n = s.length();
+  int[] L = new int[2 * n + 1];
+  int i = 0, palLen = 0, k = 0;
+  while(i < n) {
+    if((i > palLen) && 
+       (s.charAt(i - palLen - 1)==s.charAt(i))) {
+      palLen += 2;
+      i += 1;
+      continue;
+    }
+    L[k++] = palLen;
+    int e = k - 2 - palLen;
+    boolean found = false;
+    for(int j = k - 2; j > e; j--) {
+      if(L[j] == j - e - 1) {
+        palLen = j - e - 1;
+        found = true;
+        break;
+      }
+      L[k++] = Math.min(j - e - 1, L[j]);
+    }
+    if(!found) {
+      i += 1;
+      palLen = 1;
+    }
+  }
+  L[k++] = palLen;
+  int e = 2 * (k - n) - 3;
+  for(i = k - 2; i > e; i--) {
+    int d = i - e - 1;
+    L[k++] = Math.min(d, L[i]);
+  }
+  return L;
+}
+
+String getPalindrome(String s, int[] L) {
+  int max = L[0];
+  int maxI = 0;
+  for(int i = 1; i < L.length; i++) {
+    if(L[i] > max) {
+      max = L[i];
+      maxI = i;
+    }
+  }
+  int b = 0, e = 0;
+  b = maxI / 2 - L[maxI] / 2;
+  e = maxI / 2 + L[maxI] / 2;
+  e += maxI % 2 == 0 ? 0 : 1;
+  return s.substring(b, e);
+}
+
+String getPalindrome(String s)
+{
+	return getPalindrome(s, calculateAtCenters(s));
+}
+\end{lstlisting}
+\subsection{Occurences dans une chaine}
+KMP(s,w) renvoie la position des occurences de w dans s.
+\begin{lstlisting}
+LinkedList<Integer> KMP(String s, String w) {
+  LinkedList<Integer> matches = new  
+  LinkedList<Integer>();
+  int k = 0, i = -1;
+  int[] t = KMPtable(w);
+  do {
+    i = KMP(s, w, k, t);
+    if(i != -1) {
+      matches.add(i);
+      // change to i+len(w) disalow overlap
+      k = i + 1; 
+    }
+  } while(i != -1 && k < s.length());
+  return matches;
+}
+	
+int KMP(String s, String w, int k, int[] t) {
+  int i = 0;
+  int n = s.length(), m = w.length();
+  while(k + i < n) {
+    if(w.charAt(i) == s.charAt(k + i)) {
+      i++;
+      if(i == m) {return k;}
+    } else {
+      k += i - t[i];
+      i = t[i] > -1 ? t[i] : 0;
+    }
+  }
+  return -1;
+}
+
+int[] KMPtable(String w) {
+  int m = w.length();
+  int[] t = new int[m];
+  int pos = 2, cnd = 0;
+  t[0] = -1;
+  t[1] = 0;
+  while(pos < m) {
+    if(w.charAt(pos - 1) == w.charAt(cnd)) {
+      t[pos++] = ++cnd;
+    } else if(cnd > 0) {
+      cnd = t[cnd];
+    } else {
+      t[pos++] = 0;
+    }
+  }
+  return t;
+}
+\end{lstlisting}
+\subsection{Algorithmes de tri {\footnotesize \textit{non-testé}}}
+\begin{lstlisting}
+int findKth(int[] A, int k, int n) {
+  if(n <= 10) {
+    Arrays.sort(A, 0, n);
+    return A[k];
+  }
+  int nG = (int)Math.ceil(n / 5.0);
+  int[][] group = new int[nG][];
+  int[] kth = new int[nG];
+  for(int i = 0; i < nG; i++) {
+    if(i == nG - 1 && n % 5 != 0) {
+      group[i] = Arrays.copyOfRange(A, (n/5)* 5, n);
+      kth[i] = findKth(group[i], group[i].length / 2, 
+                     group[i].length);
+    } else {
+      group[i] = Arrays.copyOfRange(A, i*5, (i+1)*5);
+      kth[i] = findKth(group[i], 2, group[i].length);
+    }
+  }
+  int M = findKth(kth, nG / 2, nG);
+  int[] S = new int[n]; 
+  int[] E = new int[n];
+  int[] B = new int[n];
+  int s = 0, e = 0, b = 0;
+  for(int i = 0; i < n; i++) {
+    if(A[i] < M) {
+      S[s++] = A[i];
+    } else if(A[i] > M) {
+      B[b++] = A[i];
+    } else {E[e++] = A[i];}
+  }
+  if(k < s) {
+    return findKth(S, k, s);
+  } else if(k >= s + e) {
+    return findKth(B, k - s - e, b);
+  }
+  return M;
+}
+
+int[] countSort(int[] A, int k) { // O(n + k)
+  int[] C = new int[k];
+  for(int j = 0; j < A.length; j++) {
+    C[A[j]]++;
+  }
+  for(int j = 1; j < k; j++) {
+    C[j] += C[j - 1];
+  }
+  int[] B = new int[A.length];
+  for(int j = A.length - 1; j >= 0; j--) {
+    B[C[A[j]] - 1] = A[j];
+    C[A[j]]--;
+  }
+  return B;
+}
+	
+int[][] radixSort(int[][] nums, int k) { // O(d*(n+k))
+  int n = nums.length;
+  int m = nums[0].length;
+  int[][] B = null;
+  for(int i = m - 1; i >= 0; i--) {
+    int[] C = new int[k];
+    for(int j = 0; j < n; j++) {
+      C[nums[j][i]]++;
+    }
+    for(int j = 1; j < k; j++) {
+      C[j] += C[j - 1];
+    }
+    B = new int[n][];
+    for(int j = n - 1; j >= 0; j--) {
+      B[C[nums[j][i]] - 1] = nums[j];
+      C[nums[j][i]] = C[nums[j][i]] - 1;
+    }
+    nums = B;
+  }
+  return nums;
+}
+
+int mergeSort(int[] a) { 
+  int n = a.length;
+  if(n == 1) {return 0;}
+  int m = n / 2;
+  int[] left = Arrays.copyOfRange(a, 0, m);
+  int[] right = Arrays.copyOfRange(a, m, n);
+  int inv = mergeSort(left);
+  inv += mergeSort(right);
+  inv += merge(left, right, a);
+  return inv;
+}
+
+int merge(int[] left, int[] right, int[] a) {
+  int i = 0, l = 0, r = 0, inv = 0;
+  while(l < left.length && r < right.length) {
+    if(left[l] <= right[r]) {
+      a[i++] = left[l++];
+    } else {
+      inv += left.length - l;
+      a[i++] = right[r++];
+    }
+  }
+  for(int j = l; j < left.length; j++) {
+    a[i++] = left[j];
+  }
+  for(int j = r; j < right.length; j++) {
+    a[i++] = right[j];
+  }
+  return inv;
+}
+
+int countMinSwapsToSort(int[] a) {
+  int[] b = a.clone();
+  Arrays.sort(b);
+  int nSwaps = 0;
+  for(int i = 0; i < a.length; i++) {
+    // cuidado com elementos repetidos!
+    int j = Arrays.binarySearch(b, a[i]);
+    if(b[i] == a[j] && i != j) {
+      nSwaps++;
+      swap(a, i, j);
+    }
+  }
+  for(int i = 0; i < a.length; i++) {
+    if(a[i] != b[i]) {
+      nSwaps++;
+    }
+  }
+  return nSwaps;
+}
+
+//Count (i, j):h[i] <= h[k] <= h[j], k = i+1,...,j-1.
+int countVisiblePairs(int[] h) { // O(n) 
+  int n = h.length;
+  int[] p = new int[n];
+  int[] r = new int[n];
+  Stack<Integer> S = new Stack<Integer>();
+  for(int i = 0; i < n; i++) {
+    int c = 0;
+    if(S.isEmpty()) {
+      S.push(h[i]);
+      p[i] = 0;
+    } else {
+      if(S.peek() == h[i]) {
+        p[i] = p[i - 1] + 1 - r[i - 1];
+      } else {
+        while(!S.isEmpty() && S.peek() < h[i]) {
+	   S.pop();
+	   c++;
+	 }
+	 p[i] = c;
+	 r[i] = c;
+	 if(!S.isEmpty()) {
+	   p[i]++;
+	 }
+      }
+    S.push(h[i]);
+    }
+  }
+  return sum(p);
+}
+
+void shuffle(Object[] a)
+{
+  int N = a.length;
+  for (int i = 0; i < N; i++) {
+    int r = i + (int) (Math.random() * (N-i));
+    swap(a, i, r);
+  }
 }
 \end{lstlisting}
