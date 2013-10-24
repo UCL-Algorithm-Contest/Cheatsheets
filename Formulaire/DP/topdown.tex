@@ -1,0 +1,19 @@
+\subsection{Top-down}
+Même problème que bottom-up. Idée principale : mémoisation (On retient les résultats intermédiaires).
+\newline
+\begin{lstlisting}
+int solve(int i, int a, int b) {
+  if(i == n) {
+    memo[i][a][b] = max(a, b, sum - a - b) - min(a, b, sum - a - b);
+    return memo[i][a][b]; 
+  }
+  if(memo[i][a][b] != null) {
+    return memo[i][a][b];
+  }
+  int giveA = solve(i + 1, a + v[i], b);
+  int giveB = solve(i + 1, a, b + v[i]);
+  int giveC = solve(i + 1, a, b);
+  memo[i][a][b] = min(giveA, giveB, giveC);
+  return memo[i][a][b];
+}
+\end{lstlisting}

@@ -1,0 +1,29 @@
+\subsection{Problème du sac à dos (Knapsack)}
+On a $n$ objets de valeurs $v[i]$ et de poids $w[i]$, un entier $W$, on veut:
+\begin{itemize}
+\item Maximiser  $\sum_i x[i] v[i]$
+\item Avec $\sum_i x[i] w[i] \leq W$ \hspace{15pt} où $ x[i] $= 0 (pas pris) ou 1 (pris)
+\end{itemize}
+\subsubsection{Un exemplaire de chaque}
+best[i][w]= meilleur façon de prendre les objets $0, 1, \ldots, i$ dans sac à dos de capacité $w$.
+
+\begin{minipage}{0.25\textwidth}
+\textbf{Cas de base:}
+\begin{itemize}
+\item $best[0][w] = v[0]$ \\si $w[0] \leq w$
+\item 0 sinon
+\end{itemize}
+\end{minipage}
+\begin{minipage}{0.25\textwidth}
+\textbf{Autres cas:}\\
+$best[i][w]   = \\ \text{\ \ }\max \{ best[i-1][w], \\ \text{\ \ \ \ }best[i-1][w-w[i]] + v[i] \}$
+\end{minipage}
+\subsubsection{Plusieurs exemplaires de chaque}
+\begin{itemize}
+\item $ best[0] = 0$
+\item $best[w] = \max_{i : w[i] < w} \{best[w - w[i]] + v[i]\}$
+\end{itemize}
+
+\subsubsection{Plusieurs knapsack}
+
+$best[i][w_1][w_2] =$ meilleur façon de prendre les objets $0, 1, \ldots, i$ dans des sacs de capacités $w_1$ et $w_2$.
