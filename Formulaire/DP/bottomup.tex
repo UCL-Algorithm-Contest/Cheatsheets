@@ -1,0 +1,51 @@
+\subsection{Bottom-up}
+Répartir pour 3 personnes n objets de valeurs $v[i]$ tel que $\max_i V_i - \min_i V_i$ est minimum ($V_i$ est la valeur totale pour la personne $i$).
+
+$canDo[i][v_1][v_2]$ =  1 si on peut donner les objets $0, 1, \ldots, i$ tel que $v_1$ va à $P_1$ et $v_2$ va à $P_2$, 0 sinon. $v_3$ déterminé à partir de la somme.
+
+\begin{minipage}{0.25\textwidth}
+\textbf{Cas de base $i = 0$:}
+\begin{itemize}
+\item $ canDo[0][0][0]  = 1$
+\item $ canDo[0][v[0]][0]  = 1$ 
+\item $ canDo[0][0][v[0]]  = 1$
+\end{itemize}
+\end{minipage}
+\begin{minipage}{0.25\textwidth}
+\textbf{Cas $i \geq 1$:} 
+
+$ canDo[i][v_1][v_2] =  \\\text{\ \ }canDo[i - 1][v_1][v_2] \vee \\  \text{\ \ }canDo[i - 1][v_1 - v[i]][v_2] \vee \\  \text{\ \ } canDo[i - 1][v_1][v_2 - v[i]] $
+\end{minipage}
+\newline
+\textbf{Sol. :} $ \min_{v_1, v_2 : canDo[n - 1][v_1][v_2]} \quad [max(v_1, v_2, S - v_1 - v_2) - min(v_1, v_2, S - v_1 - v_2)]$
+\newline
+\begin{lstlisting}
+int solveDP() {
+  boolean[][][] canDo = new boolean[v.length][sum + 1][sum + 1];
+  // initialize base cases
+  canDo[0][0][0] = true;
+  canDo[0][v[0]][0] = true;
+  canDo[0][0][v[0]] = true;
+  // compute solutions using recurrence relation
+  for(int i = 1; i < v.length; i++) {
+    for(int a = 0; a <= sum; a++) {
+      for(int b = 0; b <= sum; b++) {
+        boolean giveA = a - v[i] >= 0 && canDo[i - 1][a - v[i]][b];
+        boolean giveB = b - v[i] >= 0 && canDo[i - 1][a][b - v[i]];
+        boolean giveC = canDo[i - 1][a][b];
+        canDo[i][a][b] = giveA || giveB || giveC;
+      }
+    }
+  }
+  // compute best solution
+  int best = Integer.MAX_VALUE;
+  for(int a = 0; a <= sum; a++) {
+    for(int b = 0; b <= sum; b++) {
+      if(canDo[v.length - 1][a][b]) {
+        best = Math.min(best, max(a, b, sum - a - b) - min(a, b, sum - a - b));
+      }
+    }
+  }
+  return best;
+}
+\end{lstlisting}
