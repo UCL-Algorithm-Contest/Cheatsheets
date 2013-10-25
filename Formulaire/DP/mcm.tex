@@ -22,7 +22,7 @@ Soit une liste de matrices, trouver l'ordre qui minimise le nombres de multiplic
  \end{align*}
 \end{itemize}
 
-\subsection{MCM généralisé}
+\subsubsection{MCM généralisé}
 Soit une liste d'objets $x[0], \ldots, x[n - 1]$ et une opération $\odot$ avec un coût associé, trouver l'ordre dans lequel effectuer les opérations pour minimiser le coût total. La multiplication des matrices est remplacée par $\odot$.
 
 $$ best[i][j] = \min_{i \leq k < j} best[i][k] + best[k + 1][j] + cost(i, j, k)$$

@@ -1,4 +1,7 @@
 \section{Autres}
+\begin{center}
+	\includegraphics[width=0.7\linewidth]{whyuno.jpg}
+\end{center}
 \subsection{Permutations, Combinaisons, Arrangements... {\footnotesize \textit{non-testé}}}
 \begin{lstlisting}
 void nextPerm(int[] p) {
@@ -137,8 +140,7 @@ long fib(n)
 	return j;
 }
 \end{lstlisting}
-\subsection[Strings]{Strings $\beta\beta$}
-\textbf{Non-relu}
+\subsection{Strings {\footnotesize \textit{non-testé et non-relu}}}
 \begin{lstlisting}
 int[] suffixArray(int[][] P) {
   int[] SA = new int[P[0].length];
@@ -316,6 +318,10 @@ String getPalindrome(String s)
 {
 	return getPalindrome(s, calculateAtCenters(s));
 }
+\end{lstlisting}
+\subsection{La réponse}
+\begin{lstlisting}
+int reponse() { return 42; }
 \end{lstlisting}
 \subsection{Occurences dans une chaine}
 KMP(s,w) renvoie la position des occurences de w dans s.
@@ -536,5 +542,70 @@ void shuffle(Object[] a)
     int r = i + (int) (Math.random() * (N-i));
     swap(a, i, r);
   }
+}
+\end{lstlisting}
+\subsection{Huffman (compression)}
+Normalement utilisé pour des caractères, mais utilisables avec tout ce dont on peux compter les occurences.\\
+Construit un arbre (de préfixe) qu'on utilise pour décoder et qu'on dépile pour encoder.
+\begin{lstlisting}
+class HuffmanNode implements Comparable<HuffmanNode>
+{
+  public boolean isLeaf;
+  public int occurences;
+  public int charIndex;
+  public HuffmanNode left,right;
+  public HuffmanNode(HuffmanNode left, HuffmanNode right)
+  {
+    this.occurences = left.occurences+right.occurences;
+    this.left = left;
+    this.right = right;
+    isLeaf = false;
+  } 
+  public HuffmanNode(int charIndex, int occurences)
+  {
+    this.charIndex = charIndex;
+    this.occurences = occurences;
+    isLeaf = true;
+  }
+  @Override
+  public int compareTo(HuffmanNode o) {
+    return occurences-o.occurences;
+  }
+}
+HuffmanNode getHuffmanTree(int[] occurences) {
+  PriorityQueue<HuffmanNode> q = new PriorityQueue<HuffmanNode>();
+  for(int i = 0; i < occurences.length; i++)
+    q.add(new HuffmanNode(i, occurences[i]));
+  while(q.size() != 1) {
+    HuffmanNode right = q.poll();
+    HuffmanNode left = q.poll();
+    q.add(new HuffmanNode(left, right));
+  }
+  return q.poll();
+}
+void getHuffmanTable(HuffmanNode tree, BitSet[] result, BitSet current, int pos){
+  if(tree.isLeaf) {
+    BitSet finalBitSet = new BitSet();
+    for(int i = 0; i < pos; i++)
+      finalBitSet.set(i, current.get(pos-i-1));
+    result[tree.charIndex] = finalBitSet;
+  } else {
+    BitSet leftBitSet = new BitSet();
+    leftBitSet.or(current);
+    leftBitSet.set(pos, false);
+    getHuffmanTable(tree.left, result, leftBitSet, pos+1);
+            
+    BitSet rightBitSet = new BitSet();
+    rightBitSet.or(current);
+    rightBitSet.set(pos, true);
+    getHuffmanTable(tree.right, result, rightBitSet, pos+1);
+  }
+}
+    
+//n=occurences.length
+static BitSet[] getHuffmanTable(int n, HuffmanNode tree) {
+  BitSet[] result = new BitSet[n];
+  getHuffmanTable(tree, result, new BitSet(), 0);
+  return result;
 }
 \end{lstlisting}

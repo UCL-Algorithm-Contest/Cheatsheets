@@ -1,9 +1,10 @@
 \subsection{Suffix array}
+\includegraphics[width=\linewidth]{suffixarray.jpg}
 \begin{itemize}
 \item Suffix array de $algorithm$ = tableau trié des suffixes. Exemple :algorithm, gorithm, hm, ithm, lgorithm, m, orithm, rithm, thm
 
 \item Caractérisé par son index de départ\\
-Exemple : Suffix array de $algorithm$: $[0, \ 2, \ 7, \ 5, \ 1, \ 8, \ 3, \ 4, \ 6]$\\
+Exemple : Suffix array de $algorithm$: $$[0, \ 2, \ 7, \ 5, \ 1, \ 8, \ 3, \ 4, \ 6]$$
 Exemple : Soit $suf_j$ le suffixe commençant à l'index $j$. Soit $C(i, j, k)$ le résultat de la comparaison de $suf_j$ et $suf_k$ sur les $2^i$ premiers caractères.
 \begin{align*}
 C(i, j, k) = & \ C(i - 1, j, k) \hspace{15pt} \text{si $C(i - 1, j, k) \neq 0$} \\
@@ -100,7 +101,7 @@ int[] suffixArray(int[][] so) {
 }
 \end{lstlisting}
 
-Retourne le plus long préfixe commun de $suf_j$ et $suf_k$ pour un $so$ donné:\ \newline
+Retourne le plus long préfixe commun de $suf_j$(le suffixe de s commencant à j = s.substr(j)) et $suf_k$ pour un $so$ donné:\ \newline
 \begin{lstlisting}
 int lcp(int[][] so, int j, int k) {
   int lcp = 0;
