@@ -1,24 +1,24 @@
 static int[] depth;
 static int[] leader;
-static boolean isLeader (int a) {
-	return leader[a] == a;
-}
+static int[] size;
 static int getLeader (int a) {
-	int parent = leader[a];
-	if (!isLeader(parent)) {
-		leader[a] = getLeader(parent);
-	}
-	return leader[a];
+  if(a != leader[a])
+    leader[a] = getLeader(leader[a]);
+  return leader[a];
 }
 static void merge (int a, int b) {
-	if (!isLeader(a)) {
-		merge(getLeader(a), b);
-	} else if (!isLeader(b)) {
-		merge(a, getLeader(b));
-	} else if (depth[a] > depth[b]) {
-		merge(b,a);
-	} else {
-		leader[a] = b;
-		depth[b] = Math.max(depth[b], depth[a] + 1);
-	}
+  int leaderA = getLeader(a);
+  int leaderB = getLeader(b);
+  if(leaderA == leaderB)
+    return;
+  if(size[leaderA] > size[leaderB]) {
+    leader[leaderB] = leaderA;
+    depth[leaderA] = Math.max(depth[leaderA], depth[leaderB]+1);
+    size[leaderA] += size[leaderB];
+  }
+  else {
+  	leader[leaderA] = leaderB;
+    depth[leaderB] = Math.max(depth[leaderA]+1, depth[leaderB]);
+    size[leaderB] += size[leaderA];
+  }
 }
