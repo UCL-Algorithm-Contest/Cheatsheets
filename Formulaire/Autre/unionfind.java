@@ -17,7 +17,7 @@ static void merge (int a, int b) {
     size[leaderA] += size[leaderB];
   }
   else {
-  	leader[leaderA] = leaderB;
+    leader[leaderA] = leaderB;
     depth[leaderB] = Math.max(depth[leaderA]+1, depth[leaderB]);
     size[leaderB] += size[leaderA];
   }
