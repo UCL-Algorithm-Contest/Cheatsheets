@@ -17,6 +17,7 @@
 	\item Union: \lstinline{a | b}
 	\item Intersection: \lstinline{a & b}
 	\item Soustraction bits: \lstinline{a & ~b}
-	\item Vérifier si $n$ est une puissance de 2: \lstinline{(x & (x-1) == 0)}
+	\item Vérifier si $n$ est une puissance de 2: \lstinline{(n & (n-1) == 0)}
+	\item Least significant bit non nul de $n$: \lstinline{(n & (-n))}
 	\item Passage au négatif: \lstinline{0x7fffffff^n}
 \end{enumerate}
