@@ -152,4 +152,10 @@ long phi(long n, int primes[]) {
   return ans;
 }
 \end{lstlisting}
-% TODO exo 5.5.7.1
+\begin{lstlisting}
+for (int i = 1; i <= 1000000; i++) phi[i] = i;
+for (int i = 2; i <= 1000000; i++)
+  if (phi[i] == i) % i is prime
+    for (int j = i; j <= 1000000; j += i)
+      phi[j] = (phi[j] / i) * (i - 1);
+\end{lstlisting}
