@@ -139,6 +139,7 @@ long fib(n)
 \end{lstlisting}
 
 \subsection{Number theory}
+\subsubsection{Euler phi}
 $\phi(N) = N \times \prod_{p | N} (1 - \frac{1}{p}) = \#\{k < N | \gcd(k,N) = 1\}$
 \begin{lstlisting}
 long phi(long n, int primes[]) {
@@ -158,4 +159,18 @@ for (int i = 2; i <= 1000000; i++)
   if (phi[i] == i) % i is prime
     for (int j = i; j <= 1000000; j += i)
       phi[j] = (phi[j] / i) * (i - 1);
+\end{lstlisting}
+\subsubsection{Équations diophantiennes}
+$ax + by = c$. $d = \gcd(a,b)$, no sol si $d$ divise pas $c$ sinon $(a,b) = (x + (b/d)n, y + (a/d)n)$ où $ax + by = d$ $n \in \mathbb{Z}$.
+\begin{lstlisting}
+static int x, y;
+static int extendedEuclid(int a, int b) {
+  if (b == 0) { x = 1; y = 0; return a; }
+  int d = extendedEuclid(b, a % b);
+  int x1 = y;
+  int y1 = x - (a / b) * y;
+  x = x1;
+  y = y1;
+  return d;
+}
 \end{lstlisting}
