@@ -62,6 +62,39 @@ double[] bellmanFord(LinkedList<Edge>[] gt, int v)
   return d[n - 1];
 }
 \end{lstlisting}
+\begin{lstlisting}
+static boolean spfa (LinkedList<Edge>[] g, int s) {
+  int n = g.length;
+  int[] dist = new int[n];
+  Arrays.fill(dist, Integer.MAX_VALUE);
+  Queue<Integer> q = new LinkedList<Integer>();
+  BitSet inQueue = new BitSet(n);
+  int[] timesIn = new int[n];
+
+  dist[s] = 0;
+  q.add(s);
+  inQueue.set(s);
+  timesIn[s]++;
+  while (!q.isEmpty()) {
+    int cur = q.poll(); inQueue.clear(cur);
+    for (Edge next : g[cur]) {
+      int v = next.d, w = next.w;
+      if (dist[cur] + w < dist[v]) {
+        dist[v] = dist[cur] + w;
+        if (!inQueue.get(v)) {
+          q.add(v);
+          inQueue.set(v);
+          timesIn[v]++;
+          if (timesIn[v] >= n) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
+\end{lstlisting}
 \subsection{Floyd-Warshall}
 Plus court chemin de tout les noeuds à tout les autres. Prend en argument la matrice d'adjacence. $O(|V|^3)$ en temps et $O(|V|^2)$ en mémoire.\\
 Le graphe contient des cycles de poids négatif ssi $result[v][v]<0$.\\
