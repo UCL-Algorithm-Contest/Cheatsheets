@@ -1,8 +1,8 @@
-\section{Autres}
+\section{Miscellaneous}
 \begin{center}
 	\includegraphics[width=0.7\linewidth]{whyuno.jpg}
 \end{center}
-\subsection{Permutations, Combinaisons, Arrangements... {\footnotesize \textit{non-testé}}}
+\subsection{Permutations, Combinations, Arrangements... {\footnotesize \textit{untested}}}
 \begin{lstlisting}
 void nextPerm(int[] p) {
   int n = p.length;
@@ -84,8 +84,8 @@ void subsets(int[] set) {
   }
 }
 \end{lstlisting}
-\subsection{Décomposition en fractions unitaires {\footnotesize \textit{non-testé}}}
-Ecrire $0<\frac{p}{q}<1$ sous forme de sommes de $\frac{1}{k}$
+\subsection{Decomposition in unit fractions {\footnotesize \textit{untested}}}
+Write $0<\frac{p}{q}<1$ as a sum of $\frac{1}{k}$
 \begin{lstlisting}
 void expandUnitFrac(long p, long q)
 {
@@ -97,10 +97,10 @@ void expandUnitFrac(long p, long q)
 	}
 }
 \end{lstlisting}
-\subsection{Combinaison}
-Nombre de combinaison de taille $k$ parmi $n$ ($C^k_n$)
+\subsection{Combination}
+Number of combinations of $k$ elements within $n$ ones ($C^k_n$)
 
-Cas spécial: $C^k_n\ mod\ 2 = n\oplus m$
+Special case : $C^k_n\ mod\ 2 = n\oplus m$
 \begin{lstlisting}
 long C(int n, int k)
 {
@@ -114,9 +114,9 @@ long C(int n, int k)
 }
 \end{lstlisting}
 %TODO: Nombres de Catalan
-\subsection{Suite de fibonacci {\footnotesize \textit{non-testé}}}
+\subsection{Fibonacci series {\footnotesize \textit{untested}}}
 $f(0) = 0$, $f(1) = 1$ et $f(n) = f(n - 1) + f(n - 2)$.\\
-On a la relation suivante, qui permet de calculer tout nombre de la suite en $O(log(n))$:\\
+The following relation enables us to compute every number of the series in $O(log(n))$ :\\
 $$\begin{pmatrix}
 1 & 1\\
 1 & 0
@@ -145,11 +145,11 @@ long fib(n)
 }
 \end{lstlisting}
 
-\subsection{Strings {\footnotesize \textit{non-testé et non-relu}}}
+\subsection{Strings {\footnotesize \textit{untested}}}
 \begin{lstlisting}
 
 \end{lstlisting}
-\subsubsection{Palindrome maximum}
+\subsubsection{Longest palindrome}
 \begin{lstlisting}
 int[] calculateAtCenters(String s) {
   int n = s.length();
@@ -208,12 +208,12 @@ String getPalindrome(String s)
 	return getPalindrome(s, calculateAtCenters(s));
 }
 \end{lstlisting}
-\subsection{La réponse}
+\subsection{The answer}
 \begin{lstlisting}
 int reponse() { return 42; }
 \end{lstlisting}
-\subsection{Occurences dans une chaine}
-KMP(s,w) renvoie la position des occurences de w dans s.
+\subsection{Occurences in a string}
+KMP(s,w) returns occurences index of w in s.
 \begin{lstlisting}
 LinkedList<Integer> KMP(String s, String w) {
   LinkedList<Integer> matches = new  
@@ -264,7 +264,7 @@ int[] KMPtable(String w) {
   return t;
 }
 \end{lstlisting}
-\subsection{Algorithmes de tri {\footnotesize \textit{non-testé}}}
+\subsection{Sort algorithms {\footnotesize \textit{untested}}}
 \begin{lstlisting}
 int findKth(int[] A, int k, int n) {
   if(n <= 10) {
@@ -434,8 +434,8 @@ void shuffle(Object[] a)
 }
 \end{lstlisting}
 \subsection{Huffman (compression)}
-Normalement utilisé pour des caractères, mais utilisables avec tout ce dont on peux compter les occurences.\\
-Construit un arbre (de préfixe) qu'on utilise pour décoder et qu'on dépile pour encoder.
+Usually used for characters, but usable with everything in which we can count occurrences. \\
+Make a prefix tree we use to decode and we unstack to encode.
 \begin{lstlisting}
 class HuffmanNode implements Comparable<HuffmanNode>
 {
@@ -498,7 +498,7 @@ static BitSet[] getHuffmanTable(int n, HuffmanNode tree) {
   return result;
 }
 \end{lstlisting}
-\subsection{Union find}
+\subsection{Union Find}
 \lstinputlisting{Autre/unionfind.java}
 \subsection{Fenwick Tree (RSQ solver)}
 \lstinputlisting{Autre/Fenwicktree.java}
