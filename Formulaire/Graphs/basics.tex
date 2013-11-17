@@ -1,0 +1,14 @@
+\subsection{Basics}
+\begin{itemize}
+\item Adjacency matrix: $A[i][j] = 1$ if $i$ is connected to $j$ and $0$ otherwise
+\item Undirected graph: $A[i][j] = A[j][i]\ \forall\ i,j$ ($A = A^T$)
+\item Adjacency list: \lstinline|LinkedList<Integer>[] g;|
+$g[i]$ stores all neighbors of $i$
+\item Useful alternatives: 
+\begin{lstlisting}
+HashSet<Integer>[] g; // for edge deletion
+HashMap<Integer, Integer>[] g; // for weighted graph
+\end{lstlisting}
+\item Basic classes
+\lstinputlisting{Graphs/basics.java}
+\end{itemize}
