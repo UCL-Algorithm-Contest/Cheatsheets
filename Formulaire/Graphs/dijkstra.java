@@ -7,11 +7,11 @@ double[] dijkstra(LinkedList<Edge>[] g, int v) {
     PQ.add(e);
   while(!PQ.isEmpty()) {
     Edge minE = PQ.poll();
-    if(d[minE.dest] == Double.POSITIVE_INFINITY) {
-      d[minE.dest] = minE.w;
+    if(d[minE.d] == Double.POSITIVE_INFINITY) {
+      d[minE.d] = minE.w;
       for(Edge e : g[minE.dest])
-        if(d[e.dest] == Double.POSITIVE_INFINITY)
-          PQ.add(new Edge(e.orig, e.dest, e.w + d[e.orig]));
+        if(d[e.d] == Double.POSITIVE_INFINITY)
+          PQ.add(new Edge(e.o, e.d, e.w + d[e.o]));
     }
   }
   return d;

@@ -1,10 +1,10 @@
 \subsection{Bottom-up}
-Répartir pour 3 personnes n objets de valeurs $v[i]$ tel que $\max_i V_i - \min_i V_i$ est minimum ($V_i$ est la valeur totale pour la personne $i$).
+Give n objects of value $v[i]$ to 3 people such that $\max_i V_i - \min_i V_i$ is minimum ($V_i$ is total value for person $i$).
 
-$canDo[i][v_1][v_2]$ =  1 si on peut donner les objets $0, 1, \ldots, i$ tel que $v_1$ va à $P_1$ et $v_2$ va à $P_2$, 0 sinon. $v_3$ déterminé à partir de la somme.
+$canDo[i][v_1][v_2]$ =  1 if we can give the objects $0, 1, \ldots, i$ such that $v_1$ is going to $P_1$ and $v_2$ to $P_2$, 0 otherwise. $v_3$ is determined from the sum.
 
 \begin{minipage}{0.25\textwidth}
-\textbf{Cas de base $i = 0$:}
+\textbf{Base case $i = 0$:}
 \begin{itemize}
 \item $ canDo[0][0][0]  = 1$
 \item $ canDo[0][v[0]][0]  = 1$ 
@@ -12,7 +12,7 @@ $canDo[i][v_1][v_2]$ =  1 si on peut donner les objets $0, 1, \ldots, i$ tel que
 \end{itemize}
 \end{minipage}
 \begin{minipage}{0.25\textwidth}
-\textbf{Cas $i \geq 1$:} 
+\textbf{Case $i \geq 1$:} 
 
 $ canDo[i][v_1][v_2] =  \\\text{\ \ }canDo[i - 1][v_1][v_2] \vee \\  \text{\ \ }canDo[i - 1][v_1 - v[i]][v_2] \vee \\  \text{\ \ } canDo[i - 1][v_1][v_2 - v[i]] $
 \end{minipage}

@@ -1,25 +1,25 @@
 \subsection{Edit distance}
-On a deux String $x$ et $y$, en effectuant des opérations sur $x$, on veut obtenir le coût minimum pour transformer $x$ en $y$.
+Given two String $x$ and $y$, by performing operations on en $x$, compute the minimal cost to transform $x$ into $y$.
 
-On peut (coût opération):
+We can (operation cost):
 \begin{enumerate}
- \item Enlever un caractère (D=1)
- \item Insérer un caractère (I=1)
- \item Remplacer un caractère (R=2)
+ \item Remove a character (D=1)
+ \item Insert a character (I=1)
+ \item Replace a character(R=2)
 \end{enumerate}
 
 \begin{itemize}
  \item \textbf{Formulation}:$
- editDist[i][j] $= coût min. pour transformer $x_0 \cdots x_{i - 1}$ en $y_0 \cdots y_{j - 1}$
- \item \textbf{Cas de base}: \\$ editDist[i][0] = i \cdot D \hspace{15pt}
+ editDist[i][j] $= min. cost to transform $x_0 \cdots x_{i - 1}$ into $y_0 \cdots y_{j - 1}$
+ \item \textbf{Base case}: \\$ editDist[i][0] = i \cdot D \hspace{15pt}
  editDist[0][j] = j \cdot I$
- \item \textbf{Autres cas}:
+ \item \textbf{Other cases}:
  \begin{align*}
  editDist[i][j] = \min  \quad  & editDist[i - 1][j] + D, \\
                                & editDist[i][j - 1] + I, \\
                                & editDist[i - 1][j - 1] + R^*
  \end{align*}
- où $R^* = R$ si $x[i-1] \neq y[j-1]$ et $0$ sinon.
+ where $R^* = R$ if $x[i-1] \neq y[j-1]$, $0$ else.
 \end{itemize}
 \ \newline
 \begin{lstlisting}
@@ -32,16 +32,16 @@ int editDistance(String txt1, String txt2, int I, int D, int R){
   for(int i=1; i <= txt1.length(); i++){
     for(int j=1; j <= txt2.length(); j++){
       int cost;
-      // Evaluation du cout de non-egalite d'un caractere
+      // Non-equality cost
       if(txt1.charAt(i-1)==txt2.charAt(j-1))
         cost = 0;
       else
         cost = R;
-      // Suppression, insertion, substitution
+      // Deletion, Insertion, Replacement
       d[i][j] = Math.min(Math.min(d[i-1][j] + D, d[i][j-1] + I), d[i-1][j-1] + cost);
     }
   }
-  // Le dernier element calcule est la distance
+  // Last computed element is the edit distance
   return d[txt1.length()][txt2.length()];
 }
 \end{lstlisting}
