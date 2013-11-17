@@ -1,29 +1,29 @@
-\subsection{Problème du sac à dos (Knapsack)}
-On a $n$ objets de valeurs $v[i]$ et de poids $w[i]$, un entier $W$, on veut:
+\subsection{Knapsack problem}
+Given $n$ objects of value $v[i]$ and weight$w[i]$, an integer $W$ :
 \begin{itemize}
-\item Maximiser  $\sum_i x[i] v[i]$
-\item Avec $\sum_i x[i] w[i] \leq W$ \hspace{15pt} où $ x[i] $= 0 (pas pris) ou 1 (pris)
+\item Maximize  $\sum_i x[i] v[i]$
+\item Such that $\sum_i x[i] w[i] \leq W$ \hspace{15pt} where $ x[i] $= 0 (not taken) or 1 (taken)
 \end{itemize}
-\subsubsection{Un exemplaire de chaque}
-best[i][w]= meilleur façon de prendre les objets $0, 1, \ldots, i$ dans sac à dos de capacité $w$.
+\subsubsection{No repetition}
+best[i][w]= best way to take objects $0, 1, \ldots, i$ in a knapsack of capacity $w$.
 
 \begin{minipage}{0.25\textwidth}
-\textbf{Cas de base:}
+\textbf{Base case:}
 \begin{itemize}
 \item $best[0][w] = v[0]$ \\si $w[0] \leq w$
-\item 0 sinon
+\item 0 else
 \end{itemize}
 \end{minipage}
 \begin{minipage}{0.25\textwidth}
-\textbf{Autres cas:}\\
+\textbf{Other cases:}\\
 $best[i][w]   = \\ \text{\ \ }\max \{ best[i-1][w], \\ \text{\ \ \ \ }best[i-1][w-w[i]] + v[i] \}$
 \end{minipage}
-\subsubsection{Plusieurs exemplaires de chaque}
+\subsubsection{An object can be repeated}
 \begin{itemize}
 \item $ best[0] = 0$
 \item $best[w] = \max_{i : w[i] < w} \{best[w - w[i]] + v[i]\}$
 \end{itemize}
 
-\subsubsection{Plusieurs knapsack}
+\subsubsection{Several knapsacks}
 
-$best[i][w_1][w_2] =$ meilleur façon de prendre les objets $0, 1, \ldots, i$ dans des sacs de capacités $w_1$ et $w_2$.
+$best[i][w_1][w_2] =$ best way to take objects $0, 1, \ldots, i$ in knapsacks of capacity $w_1$ and $w_2$.

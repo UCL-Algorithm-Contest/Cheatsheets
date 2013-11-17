@@ -1,5 +1,5 @@
-\subsection{Longest common subsequence (LCS)}
-Soit deux String $x$ et $y$. Trouver la sous-séquence commune la plus longue entre $x$ et $y$.
+\subsection{Longest common sub-sequence (LCS)}
+Given two String $x$ and $y$. Find the longest common sub-sequence between $x$ and $y$.
  
 \begin{center}
 \begin{tikzpicture}[scale = 0.7]
@@ -47,11 +47,11 @@ Soit deux String $x$ et $y$. Trouver la sous-séquence commune la plus longue en
 
 \begin{itemize}
  \item \textbf{Formulation:}
-$lcs[i][j] =$ taille de\\\text{\ \ \ } $LCS(x[0] x[1] \cdots x[i - 1], y[0] y[1] \cdots y[j - 1])$
-  \item \textbf{Cas de base:} $
+$lcs[i][j] =$ size of \\\text{\ \ \ } $LCS(x[0] x[1] \cdots x[i - 1], y[0] y[1] \cdots y[j - 1])$
+  \item \textbf{Base case:} $
 lcs[0][j]  = 0$ \hspace{15pt} 
 $lcs[i][0]  = 0$
-  \item \textbf{Autres cas: }
+  \item \textbf{Other cases: }
   \begin{itemize}
   \item Si $x[i-1] = y[i-1]$ alors: \\
   \quad $lcs[i][j] = 1 + lcs[i-1][j-1]$ 
