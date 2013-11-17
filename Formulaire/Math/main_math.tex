@@ -142,6 +142,16 @@ long fib(n)
 }
 \end{lstlisting}
 \subsection{Number theory}
+\subsection{Trivialité}
+long gcd (long a, long b) {
+    return (b == 0) ? a : gcd(b, a % b);
+}
+long lcm (long a, long b) {
+    return a * (b / gcd(a,b));
+}
+long modInverse (long a, long b) {
+    return big(a).modInverse(big(b)).longValue();
+}
 \subsubsection{Euler phi}
 $\phi(N) = N \times \prod_{p | N} (1 - \frac{1}{p}) = \#\{k < N | \gcd(k,N) = 1\}$
 \begin{lstlisting}
@@ -175,5 +185,21 @@ static int extendedEuclid(int a, int b) {
   x = x1;
   y = y1;
   return d;
+}
+\end{lstlisting}
+\subsubsection{Théorème des restes chinois}
+\begin{lstlisting}
+static long[] chinese (long[] b, long[] m) {
+  long x = b[0], l = m[0];
+  for (int i = 1; i < m.length; i++) {
+    long m1 = m[i], b1 = b[i];
+    long d = gcd(l, m1);
+    if ((x - b1) % d != 0) return null;
+    long lcm = l * (m1 / d);
+    long t1 = ((((x - b1) / d) % lcm) * (modInverse(m1/d, l/d) % lcm)) % lcm;
+    x = (b1 + ((t1 * m1) % lcm)) % lcm;
+    l = lcm;
+  }
+  return new long[] {x, l};
 }
 \end{lstlisting}
