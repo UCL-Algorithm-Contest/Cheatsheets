@@ -1,0 +1,213 @@
+\subsection{Points}
+\begin{lstlisting}
+class Point implements Comparable<Point>
+{
+  double x, y;
+  public int compareTo(Point o) { //xcomp
+    if(a.x < b.x) return -1;
+    if(a.x > b.x) return 1;
+    if(a.y < b.y) return -1;
+    if(a.y > b.y) return 1;
+    return 0;
+  }
+}
+
+class yComp implements Comparator<Point> {
+  public int compare(Point p, Point q) {
+    if(p.y == q.y) {return Double.compare(p.x, q.x);}
+    return Double.compare(p.y, q.y);
+  }
+}
+\end{lstlisting}
+\subsubsection{Point in box}
+\begin{lstlisting}
+boolean inBox(Point p1, Point p2, Point p) {
+  return Math.min(p1.x, p2.x) <= p.x && p.x <= Math.max(p1.x, p2.x) &&			           
+         Math.min(p1.y, p2.y) <= p.y && p.y <= Math.max(p1.y, p2.y);
+}
+\end{lstlisting}
+\subsubsection{Polar sort}
+\begin{lstlisting}
+LinkedList<Point> sortPolar(Point[] P, Point o)
+{
+  LinkedList<Point> above = new LinkedList<Point>();
+  LinkedList<Point> samePos = new LinkedList<Point>();
+  LinkedList<Point> sameNeg = new LinkedList<Point>();
+  LinkedList<Point> bellow = new LinkedList<Point>();
+  for(Point p : P)
+  {
+    if(p.y > o.y)
+      above.add(p);
+    else if(p.y < o.y)
+      bellow.add(p);
+    else
+    {
+      if(p.x < o.x)
+        sameNeg.add(p);
+      else
+        samePos.add(p);
+
+    }
+  }
+  PolarComp comp = new PolarComp(o);    
+  Collections.sort(samePos, comp);
+  Collections.sort(sameNeg, comp);
+  Collections.sort(above, comp);
+  Collections.sort(bellow, comp);
+  LinkedList<Point> sorted = new LinkedList<Point>();
+  for(Point p : samePos) sorted.add(p);
+  for(Point p : above) sorted.add(p);
+  for(Point p : sameNeg) sorted.add(p);
+  for(Point p : bellow) sorted.add(p);
+  return sorted;
+}
+
+class PolarCmp implements Comparator<Point> {
+  static Point orig = new Point(0, 0);
+  public int compare(Point p, Point q) {
+    double o = orient(orig, p, q);
+    if(o == 0) {
+      if(p.x * p.x + p.y * p.y > q.x * q.x + q.y * q.y)
+        return 1;
+      return -1;
+    }
+    return -(int)Math.signum(o);
+  }
+}
+\end{lstlisting}
+\subsubsection{Closest pair of points}
+\begin{lstlisting}
+double closestPair(Point[] points) {
+  if(points.length == 1) {return Double.POSITIVE_INFINITY;}
+  Arrays.sort(points, new xComp());
+  double min = dist(points[0], points[1]);
+  // keep track of the leftmost point
+  int leftmost = 0;
+  TreeSet<Point> candidates = new TreeSet<Point>(new yComp());
+  candidates.add(points[0]);
+  candidates.add(points[1]);
+  for(int i = 2; i < points.length; i++) {
+    Point cur = points[i];
+    // eliminate points s.t cur.x - x > min 
+    while(cur.x - points[leftmost].x > min) {
+      candidates.remove(points[leftmost]);
+      leftmost++;
+    }
+    Point low = new Point(0, cur.y - min);
+    Point high = new Point(0, cur.y + min);
+    // check all points in the rectangle
+    for(Point point : candidates.subSet(low, high))
+      min = Math.min(min, dist(cur, point));
+    candidates.add(cur);
+  }
+  return min;
+}
+\end{lstlisting}
+\subsubsection{Orientation}
+$$
+orient(p, q, r) = 
+\begin{vmatrix}
+1 & p_x & p_y \\
+1 & q_x & q_y \\
+1 & r_x & r_y
+\end{vmatrix}
+$$
+
+$$
+orient(p, q, r) \left\{
+\begin{array}{l l l}
+= 0 \quad & \text{$p, q, r$ are collinear} \\
+< 0 \quad & \text{$p$ -> $q$ -> $r$ is clockwise} \\
+> 0 \quad & \text{$p$ -> $q$ -> $r$ is counterclockwise}
+\end{array} \right.
+$$
+
+$$
+|orient(p, q, r)| = 2 \cdot area \ \triangle(p, q, r)
+$$
+
+\begin{lstlisting}
+double orient(Point p, Point q, Point r) {
+  return q.x * r.y - r.x * q.y - p.x * (r.y - q.y) + p.y * (r.x - q.x);
+}
+\end{lstlisting}
+\subsubsection{Angle visibility}
+$x$ lies strictly inside the angle formed by $p, q, r$ iff
+\begin{align*}
+sgn(orient(p, q, x)) & = sgn(orient(p, x, r)) \\
+sgn(orient(p, r, x)) & = sgn(orient(p, x, q)) \\
+\end{align*}
+To allow it to lie on the border simply check if $$sgn(orient(p, q, x)) = 0 \text{ or } sgn(orient(p, r, x)) = 0$$
+\subsubsection{Fixed radius neighbors (1D)}
+\begin{lstlisting}
+List<Double[]> findPairs1D(double[] x, double r) {
+  HashMap<Integer, List<Double>> H = new HashMap<Integer, List<Double>>();
+  // fill buckets
+  for(int i = 0; i < x.length; i++) {
+    int b = (int)(x[i] / r);
+    if(H.containsKey(b)) {
+      H.get(b).add(x[i]);
+    } else {
+      List<Double> L = new ArrayList<Double>();
+      L.add(x[i]);
+      H.put(b, L);				
+    }
+  }
+  // find pairs in consecutive buckets
+  List<Double[]> pairs = new LinkedList<Double[]>(); 
+  for(int i = 0; i < x.length; i++) {
+    int b = (int)(x[i] / r);
+    List<Double> bucket = H.get(b + 1);
+    if(bucket != null)
+      for(double y : bucket)
+        if(y - x[i] <= r)
+          pairs.add(new Double[] {x[i], y});
+  }
+  // add points in buckets
+  for(List<Double> bucket : H.values())
+    for(int i = 0; i < bucket.size(); i++)
+      for(int j = i + 1; j < bucket.size(); j++)
+        pairs.add(new Double[] {bucket.get(i), bucket.get(j)});
+  return pairs;
+}
+\end{lstlisting}
+\subsubsection{Fixed radius neighbors (2D)}
+\begin{lstlisting}
+List<Point[]> findPairs2D(Point[] points, double r) {
+  HashMap<Integer, List<Point>> H = new HashMap<Integer, List<Point>>();
+  // fill buckets
+  for(int i = 0; i < points.length; i++) {
+    int bx = (int)(points[i].x / r);
+    int by = (int)(points[i].y / r);
+    int key = 33 * bx + by;
+    if(H.containsKey(key)) {
+      H.get(key).add(points[i]);
+    } else {
+      List<Point> L = new ArrayList<Point>();
+      L.add(points[i]);
+      H.put(key, L);				
+    }
+  }
+  // find pairs in adjacent buckets
+  List<Point[]> pairs = new LinkedList<Point[]>();
+  int[][] dir = new int[][] {new int[] {1,0}, new int[] {0,1}, new int[] {1,1}};
+  for(int i = 0; i < points.length; i++) {
+    int bx = (int)(points[i].x / r);
+    int by = (int)(points[i].y / r);
+    for(int[] d : dir) {
+      List<Point> bucket = H.get(33 * (bx + d[0]) + (by + d[1]));
+      if(bucket != null)
+        for(Point y : bucket)
+          if(sqDist(points[i], y) <= r * r)
+            pairs.add(new Point[] {points[i], y});					
+    }
+  }
+  // add points in buckets
+  for(List<Point> bucket : H.values())
+    for(int i = 0; i < bucket.size(); i++)
+      for(int j = i + 1; j < bucket.size(); j++)
+        if(sqDist(bucket.get(i), bucket.get(j)) <= r * r)			
+          pairs.add(new Point[] {bucket.get(i), bucket.get(j)});
+  return pairs;
+}
+\end{lstlisting}

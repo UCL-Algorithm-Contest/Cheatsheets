@@ -1,673 +1,258 @@
-\section{Géométrie}
-Attention aux arrondis. Définir $E$ en fonction du problème.
+\section{Geometry}
+Be careful of rounding errors. Define $E$ in function of the problem.
 \begin{lstlisting}
-boolean eq(double a, double b){ return Math.abs(a - b) <= E; }
-boolean le(double a, double b) { return a < b - E; }
-boolean leq(double a, double b) { return a <= b + E; }
+boolean eq(double a,double b){return Math.abs(a - b) <= E;}
+boolean le(double a,double b){return a < b - E;}
+boolean leq(double a,double b){return a <= b + E;}
 \end{lstlisting}
-\subsection{Points {\footnotesize \textit{non-testé}}}
+\subsection{Vectors}
+\subsubsection{Rotation around (0,0)}
+$(x, y) \leftrightarrow x + y i$\\
+$\rho e^{i\theta} = \rho \cos(\theta) + i \rho \sin(\theta)$\\
+
+$(x, y)$ rotated by $\alpha$ is
+$(\cos(\alpha) x - \sin(\alpha) y, \sin(\alpha)  x + \cos(\alpha) y)$
+\input{Geometrie/points.tex}
+
+\subsection{Lines}
+General equation:$Ax + By = C$. The line through $(x_1, y_1), (x_2, y_2)$ is given by: $A = y_2 - y_1$, $B = x_1 - x_2$, $C = A x_1 + B y_1$.
+\subsubsection{Intersections}
+Intersection exists there is a solution for $A_1 x + B_1 y = C_1$ and $A_2 x + B_2 y = C_2$. This happens if and only if $$d := \det \begin{pmatrix}
+A_1 & B_1 \\
+A_2 & B_2 \\
+\end{pmatrix} \neq 0$$
+Intersection is given by
+$$\begin{pmatrix}
+x\\
+y
+\end{pmatrix} = 
+\begin{pmatrix}
+A_1 & B_1 \\
+A_2 & B_2 \\
+\end{pmatrix}^{-1} 
+\begin{pmatrix}
+C_1 \\
+C_2
+\end{pmatrix}
+=
+\frac{1}{d}
+\begin{pmatrix}
+B_2 & -B_1 \\
+-A_2 & A_1 \\
+\end{pmatrix} 
+\begin{pmatrix}
+C_1 \\
+C_2
+\end{pmatrix}
+$$
+\subsubsection{Perpendicular line}
+The lines perpendicular to $Ax + By = C$ are
+$$-Bx + Ay = D \quad \text{for $D \in \mathbb{R}$}$$
+If we want the one that goes through $(x_0, y_0)$ set
+$$D = - B x_0 + A y_0$$
+\subsubsection{Orthogonal Symmetry}
+For a line, find $X'$, the point which is the orthogonal symmetry of $X$ on line $a$. \\
+Computes the perpendicular of the given line that goes through $X$. Compute intersection $Y$. $X' = Y - (X - Y)$.
+\subsection{Segments}
+\subsubsection{Intersection}
+\begin{itemize}
+\item Treat segments as lines.
+\item If $d \neq 0$, compute line intersection $(x, y)$.
+\item Segments intersect iff
+\begin{align*}
+\min(x_1, x_2) \leq & \ x \leq \max(x_1, x_2) \\
+\min(y_1, y_2) \leq & \ y \leq \max(y_1, y_2)
+\end{align*}
+\end{itemize}
 \begin{lstlisting}
-public static class Point
-{
-  double x, y;
-}
-
-boolean eq(Point p1, Point p2) { return eq(p1.x, p2.x) && eq(p2.y, p2.y); }
-Point subtract(Point p0, Point p1) { return new Point(p0.x - p1.x, p0.y - p1.y); }
-
-class horizontalComp implements Comparator<Point>
-{
-  public int compare(Point a, Point b)
-  {
-    if(a.x < b.x) return -1;
-    if(a.x > b.x) return 1;
-    if(a.y < b.y) return -1;
-    if(a.y > b.y) return 1;
-    return 0;
-  }
-}
-\end{lstlisting}
-\subsubsection{Ordonner selon angle {\footnotesize \textit{non-testé}}}
-\begin{lstlisting}
-LinkedList<Point> sortPolar(Point[] P, Point o)
-{
-  LinkedList<Point> above = new LinkedList<Point>();
-  LinkedList<Point> samePos = new LinkedList<Point>();
-  LinkedList<Point> sameNeg = new LinkedList<Point>();
-  LinkedList<Point> bellow = new LinkedList<Point>();
-  for(Point p : P)
-  {
-    if(p.y > o.y)
-      above.add(p);
-    else if(p.y < o.y)
-      bellow.add(p);
-    else
-    {
-      if(p.x < o.x)
-        sameNeg.add(p);
-      else
-        samePos.add(p);
-
-    }
-  }
-  PolarComp comp = new PolarComp(o);    
-  Collections.sort(samePos, comp);
-  Collections.sort(sameNeg, comp);
-  Collections.sort(above, comp);
-  Collections.sort(bellow, comp);
-  LinkedList<Point> sorted = new LinkedList<Point>();
-  for(Point p : samePos) sorted.add(p);
-  for(Point p : above) sorted.add(p);
-  for(Point p : sameNeg) sorted.add(p);
-  for(Point p : bellow) sorted.add(p);
-  return sorted;
-}
-
-class PolarComp implements Comparator<Point>
-{
-  Point o;
-  public PolarComp(Point o)
-  {
-    this.o = o;
-  }
-  @Override
-  public int compare(Point p0, Point p1)
-  {
-    double pE = prodE(subtract(p0,o), subtract(p1,o));
-    if(pE < 0)
-      return 1;
-    else if(pE > 0)
-      return -1;
-    else
-      return Double.compare(squareDist(p0, o), squareDist(p1, o));
-  }
-}
-\end{lstlisting}
-\subsubsection{Paire de points la plus proche {\footnotesize \textit{non-testé}}}
-\begin{lstlisting}
-double closestPair(Point[] points)
-{
-  if(points.length == 1) return 0;
-  Arrays.sort(points, new horizontalComp());
-  double min = distance(points[0], points[1]);
-  int leftmost = 0;
-  SortedSet<Point> candidates = new TreeSet<Point>(new verticalComp());  
-  candidates.add(points[0]);
-  candidates.add(points[1]);
-  for (int i = 2; i < points.length; i++)
-  {
-    Point cur = points[i];
-    while (cur.x - points[leftmost].x > min)
-    {
-      candidates.remove(points[leftmost]);
-      leftmost++;
-    }
-    Point low = new Point(cur.x-min, (int)(cur.y-min));
-    Point high = new Point(cur.x, (int)(cur.y+min));
-    for(Point point:candidates.subSet(low,high))
-    {
-      double d = distance(cur, point);
-      if (d < min)
-        min = d;
-    }
-    candidates.add(cur);
-  }
-  return min;
-}
-\end{lstlisting}
-\subsection{Lignes {\footnotesize \textit{non-testé}}}
-\begin{lstlisting}
-class Line
-{
-  double a;
-  double b;
-  double c;
-  public Line(double a, double b, double c)
-  {
-    this.a = a;
-    this.b = b;
-    this.c = c;
-  }
-  public Line(Point p1, Point p2) {
-    if(p1.x == p2.x) {
-      a = 1;
-      b = 0;
-      c = -p1.x;
-    } else {
-      b = 1;
-      a = -(p1.y - p2.y) / (p1.x - p2.x);
-      c = -(a * p1.x) - (b * p1.y);
-    }
-  }
-  public Line(Point p, double m) {
-    a = -m;
-    b = 1;
-    c = -((a*p.x) + (b*p.y));
-  }
-}
-
-boolean areParallel(Line l1, Line l2) {
-  return (eq(l1.a, l2.a) && eq(l1.b, l2.b));
-}
-
-boolean areEqual(Line l1, Line l2) {
-  return areParallel(l1, l2) && eq(l1.c, l2.c);
-}
-
-boolean contains(Line l, Point p) {
-  return eq(l.a*p.x + l.b*p.y + l.c, 0); 
-}
-
-Point intersection(Line l1, Line l2) {
-  if(areEqual(l1, l2) || areParallel(l1, l2)) {
-    return null;
-  }
-  double x = (l2.b * l1.c - l1.b * l2.c) /
-	      (l2.a * l1.b - l1.a * l2.b);
-  double y;
-  if(Math.abs(l1.b) > E) {
-    y = -(l1.a * x + l1.c) / l1.b;
-  } else {
-    y = -(l2.a * x + l2.c) / l2.b;
-  }
-  return new Point(x, y);
-}
-
-double angle(Line l1, Line l2) {
-  double tan = (l1.a * l2.b - l2.a * l1.b) /
-		(l1.a * l2.a + l1.b * l2.b);
-  return Math.atan(tan);
-}
-
-Line getPerp(Line l, Point p) {
-  return new Line(p, 1 / l.a);
-}
-
-Point closest(Line l, Point p) {
-  double x;
-  double y;
-  if(isVertical(l)) {
-    x = -l.c;
-    y = p.y;
-    return new Point(x, y);
-  }
-  if(isHorizontal(l)) {
-    x = p.x;
-    y = -l.c;
-    return new Point(x, y);
-  } 
-  Line perp = getPerp(l, p);
-  return intersection(l, perp);
-}
-
-boolean isVertical(Line l) {
-  return eq(l.b, 0);	
-}
-
-boolean isHorizontal(Line l) {
-  return eq(l.a, 0);
-}
-\end{lstlisting}
-\subsection{Segments {\footnotesize \textit{non-testé}}}
-\begin{lstlisting}
-boolean onSegment(Segment s, Point p) {
-  return Math.min(s.p1.x, s.p2.x) <= p.x &&
-         Math.max(s.p1.x, s.p2.x) >= p.x &&
-         Math.min(s.p1.y, s.p2.y) <= p.y && 
-         Math.max(s.p1.y, s.p2.y) >= p.y;
-}
-
-double direction(Segment s, Point p) {
-  return prodE(subtract(p,s.p1), subtract(s.p2,s.p1));
-}
- 
-boolean intersects(Segment s1, Segment s2) {
-  double d1 = direction(s2, s1.p1);
-  double d2 = direction(s2, s1.p2);
-  double d3 = direction(s1, s2.p1);
-  double d4 = direction(s1, s2.p2);
-  if(((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && 
-     ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0))) {
-    return true;
-  } else if(eq(d1, 0) && onSegment(s2, s1.p1)) {
-    return true;
-  } else if(eq(d2, 0) && onSegment(s2, s1.p2)) {
-    return true;
-  } else if(eq(d3, 0) && onSegment(s1, s2.p1)) {
-    return true;
-  } else if(eq(d4, 0) && onSegment(s1, s2.p2)) {
-    return true;
-  }
+boolean intersects(Point p1, Point p2, Point p3, Point p4) {
+  double o1 = orient(p1, p2, p3);
+  double o2 = orient(p1, p2, p4);
+  double o3 = orient(p3, p4, p1);
+  double o4 = orient(p3, p4, p2);
+  // check first condition of the lemma
+  if(o1 * o2 < 0 && o3 * o4 < 0) return true;
+  // check seconds condition of the lemma
+  if(o1 == 0 && inBox(p1, p2, p3)) return true;
+  if(o2 == 0 && inBox(p1, p2, p4)) return true;
+  if(o3 == 0 && inBox(p3, p4, p1)) return true;
+  if(o4 == 0 && inBox(p3, p4, p2)) return true;
   return false;
 }
-
+\end{lstlisting}
+\subsubsection{Intersections problem}
+Given a lot of segments, return true if it exists a pair that intersects.
+\begin{lstlisting}
 boolean segmentIntersection(Segment[] S) {
-  Point[] P = new Point[S.length * 2];
-  for(int i = 0; i < S.length; i++) {
-    S[i].p1.i = i; S[i].p1.isLeft = true;
-    S[i].p2.i = i; S[i].p2.isLeft = false;
+  Event[] events = new Event[2 * S.length];
+  // create event points
+  for(int i = 0, j = 0; i < S.length; i++) {
+    events[j++] = new Event(S[i].l.x, true, S[i]);
+    events[j++] = new Event(S[i].r.x, false, S[i]);
   }
-  int j = 0;
-  for(Segment s : S) {
-    P[j++] = s.p1;
-    P[j++] = s.p2;
-  }
-  Arrays.sort(P, new SegIntPointComp());
-  SegmentComp comp = new SegmentComp();
-  TreeSet<Segment> T = new TreeSet<Segment>(comp);
-  for(int i = 0; i < P.length; i++) {
-    Segment s = S[P[i].i]; 
-    if(P[i].isLeft) {
-      comp.x = P[i].x;
+  Arrays.sort(events);
+  SegmentCmp cmp = new SegmentCmp();
+  TreeSet<Segment> T = new TreeSet<Segment>(cmp);
+  // sweep line
+  for(Event event : events) {
+    Segment s = event.s;
+    cmp.x = event.x;
+    if(event.isLeft) {
+      // new segment found. check if it intersects one of its neighbors
       T.add(s);
       Segment above = T.higher(s);
       Segment bellow = T.lower(s);
       if((above != null && intersects(above, s)) || 
-         (bellow != null && intersects(bellow, s))) {
+         (bellow != null && intersects(bellow, s)))
         return true;
-      }
     } else {
+      // end of segment. check if its neighbors intersect
       Segment above = T.higher(s);
       Segment bellow = T.lower(s);
-      if(above != null && bellow != null &&  
-        intersects(above, bellow)) {
-	 return true;
-      }
+      if(above != null && bellow != null && intersects(above, bellow))
+        return true;
       T.remove(s);
     }
   }
   return false;
 }
 
-class SegIntPointComp implements Comparator<Point> {
-  @Override
-  public int compare(Point p0, Point p1) {
-    int xc = Double.compare(p0.x, p1.x);
-    if(xc == 0) {
-      if(p0.isLeft && !p1.isLeft) {
-        return -1;
-      }
-      if(!p0.isLeft && p1.isLeft) {
-	 return 1;
-      } else {
-	 return Double.compare(p0.y, p1.y);
-      }
-    }
-    return xc;
-  }
-}
-
-class SegmentComp implements Comparator<Segment> {
+class Event implements Comparable<Event> {
   double x;
-  @Override
+  boolean isLeft;
+  Segment s;
+  public Event(double x, boolean isLeft, Segment s) {
+    this.x = x;
+    this.isLeft = isLeft;
+    this.s = s;
+  }
+  public int compareTo(Event other) {
+    int cmp = Double.compare(x, other.x);
+    // ensure that left comes before right
+    if(cmp == 0) return isLeft? -1 : 1;
+    return cmp;
+  }
+  public String toString() {
+    return x + " " + isLeft;
+  }
+}
+
+class SegmentCmp implements Comparator<Segment> {
+  double x;
   public int compare(Segment s1, Segment s2) {
-    if(s1.p1.i == s2.p1.i && s1.p2.i == s2.p2.i) {
-      return 0;
-    }
-    Segment toAdd = null;
-    Segment o = null;
-    if(eq(s1.p1.x, x)) {
-      toAdd = s1;
-      o = s2;		
-    } else if(eq(s2.p1.x, x)){
-      toAdd = s2;
-      o = s1;
+    // compute A,B,C from eq Ax + by = C for each segment
+    double A1 = s1.r.y - s1.l.y;
+    double B1 = s1.l.x - s1.r.x;
+    double C1 = A1 * s1.l.x + B1 * s1.l.y;
+
+    double A2 = s2.r.y - s2.l.y;
+    double B2 = s2.l.x - s2.r.x;
+    double C2 = A2 * s2.l.x + B2 * s2.l.y;
+
+    // no divisions =)
+    double t1 = B2 * (C1 - A1 * x);
+    double t2 = B1 * (C2 - A2 * x);
+    if(t1 == t2) {
+      return s1 == s2? 0 : -1;
+    } else if(B1 * B2 > 0) {
+      return Double.compare(t1, t2);
     } else {
-      return 0;
+      return Double.compare(t2, t1);
     }
-    double y = Math.min(o.p1.y, o.p2.y);
-    Segment v = new Segment(new Point(x, y),
-                              toAdd.p1);
-    if(eq(s1.p1.x, x)) {
-      if(intersects(v, o)) {
-         return 1;
-      } else {
-         return -1;
+  }
+}
+\end{lstlisting}
+\subsection{Circles}
+\subsubsection{Circles from 3 points}
+\begin{itemize}
+\item $3$ non collinear points define a unique circle.
+\item $c = $ intersection of bisectors of $XY$ and $YZ$. 
+\end{itemize}
+\subsection{Polygon}
+\subsubsection{Check convexity}
+\begin{lstlisting}
+boolean isConvex(Point[] P) {
+  if(P.length < 3) return false;
+  double o1 = orient(P[P.length-1], P[0], P[1]);
+  for (int i = 0; i < P.length; i++) {
+    double o2 = orient(P[i], P[i + 1], P[i + 2]);
+    if(o1 * o2  < 0) {
+      return false;
+    } else if (o2 != 0) {
+      o1 = o2;
+    }
+  }
+  return true;
+}
+\end{lstlisting}
+\subsubsection{Winding number}
+\begin{lstlisting}
+// assumes p is not on P
+double winding(Point[] P, Point p) {
+  //make a translation so p = (0, 0)
+  for(Point q : P) {
+    q.x -= p.x;
+    q.y -= p.y;
+  }
+  double w = 0;
+  for(int i = 0; i < P.length - 1; i++) {
+    if(P[i].y * P[i + 1].y < 0) {
+      // segment crosses the x-axis
+      double r = (P[i].y - P[i+1].y) * P[i].x + P[i].y * (P[i+1].x - P[i].x);
+      //check for intersection with the positive x-axis
+      if((P[i].y - P[i+1].y > 0 && r > 0) || (P[i].y - P[i+1].y < 0 && r < 0)) {
+        // segment fully crosses the x-axis
+        // - to + add 1, + to - subtract 1
+        w += P[i].y < 0? 1 : -1;
+      } else if(P[i].y == 0 && P[i].x > 0) {
+        // the segment starts at the x-axis
+        // 0 to + add 0.5, 0 to - subtract 0.5
+        w += P[i+1].y > 0? 0.5 : -0.5;
+      } else if(P[i+1].y == 0 && P[i+1].x > 0) {
+        // the segment ends at the x-axis
+        // - to 0 add 0.5, + to 0 subtract 0.5
+        w += P[i].y < 0? 0.5 : -0.5;
       }
-    } else if(eq(s2.p1.x, x)) {
-	 if(intersects(v, o)) {
-	   return -1;
-     } else {
-       return 1;
-     }
-    }
-    return 0;
-  }
-}
-
-// r > 0: a droite, r < 0: a gauche, r==0: colineiare
-public static int positionFromSegment(Point segmentFrom, Point segmentTo, Point p)
-{
-  //Cross product of vectors segmentFrom->segmentTo and segmentFrom->p
-  return (segmentTo.x-segmentFrom.x)*(p.y-segmentFrom.y)-(segmentTo.y-segmentFrom.y)*(p.x-segmentFrom.x);
-}
-\end{lstlisting}
-\subsection{Triangles {\footnotesize \textit{non-testé}}}
-Loi des sinus:$\frac{a}{\sin(A)}=\frac{b}{\sin(B)}=\frac{c}{\sin(C)}=2r$
-Loi des cosinus:\\
-$a^2 = b^2 + c^2 – 2bc\cos(A)$\\
-$b^2 = a^2 + c^2 – 2ac\cos(B)$\\
-$c^2 = a^2 + b^2 – 2ab\cos(C)$\\
-Formule de Héron: Aire$=\sqrt{(s-a)(s-b)(s-c)}$ avec $s=\frac{a+b+c}{2}$
-\begin{lstlisting}
-class Triangle
-{
-  Segment a, b, c;
-  public Triangle(Segment a,Segment b,Segment c)
-  {
-    this.a = a;
-    this.b = b;
-    this.c = c;
-  }
-  public Triangle(Point p1, Point p2, Point p3)
-  {
-    a = new Segment(p1, p2);
-    b = new Segment(p1, p3);
-    c = new Segment(p2, p3);
-  }
-}
-
-//Triangle degenere si result==0
-//Sinon, si result>0, dans le sens de a.
-//Sinon, -a.
-double signedTriangleArea(Triangle t)
-{
-  return (t.p1.x * t.p2.y - t.p1.y * t.p2.x +
-          t.p1.y * t.p3.x - t.p1.x * t.p3.y +
-          t.p2.x * t.p3.y - t.p3.x * t.p2.y) / 2.0;
-}
-	
-double triangleArea(Triangle t)
-{
-  return Math.abs(signedTrinangleArea(t));
-}
-
-boolean isInTriangle(Point p, Triangle t)
-{
-  Triangle a = new Triangle(p, t.p1, t.p2);
-  Triangle b = new Triangle(p, t.p1, t.p3);
-  Triangle c = new Triangle(p, t.p2, t.p3);
-  double total = triangleArea(a) +
-		  triangleArea(b) +
-		  triangleArea(c);
-  return eq(total, triangleArea(t));
-}
-
-boolean isInTriangle2(Point p, Triangle t)
-{
-  return !(cw(t.p1, t.p2, p) ||
-           cw(t.p2, t.p3, p) ||
-           cw(t.p3, t.p1, p));
-}
-
-boolean ccw(Point a, Point b, Point c)
-{
-  return signedTrinangleArea(new Triangle(a, b, c))>E;
-}
-
-boolean cw(Point a, Point b, Point c)
-{
-  return signedTrinangleArea(new Triangle(a, b, c))<E;
-}
-
-boolean collinear(Point a, Point b, Point c)
-{
-  return Math.abs(signedTrinangleArea(
-         new Triangle(a, b, c))) <= E;
-}
-\end{lstlisting}
-\subsection{Cercles {\footnotesize \textit{non-testé}}}
-Aire de l'intersection entre deux cercles de rayon $r$ et $R$ à une distance $d$:
-$A = r^2\arccos(X) + R^2 \arccos(Y) - \frac{\sqrt(Z)}{2}$\\
-$X = \frac{d^2+r^2-R^2}{2dr}$\\
-$Y = \frac{d^2+R^2-r^2}{2dR}$\\
-$Z = (-d+r+R)*(d+r-R)*(d-r+R)*(d+r+R)$
-\begin{lstlisting}
-class Circle
-{
-  Point c;
-  double r;
-  public Circle(Point c, double r)
-  {
-    this.c = c;
-    this.r = r;
-  }
-}
-
-//Centre du cercle circonscrit
-Point circumcenter(Point p1, Point p2, Point p3)
-{
-  if(eq(p1.x, p2.x))
-    return circumcenter(p1, p3, p2);
-  else if(eq(p2.x, p3.x))
-    return circumcenter(p2, p1, p3);
-  double ma = (p2.y - p1.y) / (p2.x - p1.x);
-  double mb = (p3.y - p2.y) / (p3.x - p2.x);
-  double x = (ma*mb*(p1.y - p3.y) + 
-              mb*(p1.x + p2.x) - 
-              ma*(p2.x + p3.x)) / 
-             (2 * mb - 2 * ma);
-  double y = 0.0;
-  if(eq(ma, 0)) {
-    y = (-1/mb)*(x-(p2.x + p3.x)/2) +  
-        (p2.y+p3.y)/2; 	
-  } else {
-    y = (-1/ma)*(x-(p1.x + p2.x)/2) + 
-        (p1.y + p2.y)/2; 	
-  }
-  return new Point(x, y);
-}
-
-//Point d'intersection avec la tangente au cercle passant par le point p
-Point[] tangentPoints(Point p, Circle c)
-{
-  double alfa = 0.0;
-  if(!eq(p.x, c.c.x)) {
-    alfa = Math.atan((p.y - c.c.y) / 
-                     (p.x - c.c.x));
-    if(p.x < c.c.x) {
-      alfa += Math.PI;
-    }
-  } else {
-    alfa = Math.PI / 2;
-    if(p.y < c.c.y) {
-      alfa += Math.PI;
     }
   }
-  double d = distance(p, c.c);
-  double beta = Math.acos(c.r / d);	    
-  double x1 = c.c.x +c.r * Math.cos(alfa + beta);  
-  double y1 = c.c.y +c.r * Math.sin(alfa + beta);
-  double x2 = c.c.x +c.r * Math.cos(alfa - beta);  
-  double y2 = c.c.y +c.r * Math.sin(alfa - beta);  
-  return new Point[] {new Point(x1, y1), 
-                      new Point(x2, y2)};
+  return w;
 }
 \end{lstlisting}
-\subsection{Polygones {\footnotesize \textit{non-testé}}}
-%TODO: Vérification fonction ear.
+\subsubsection{Convex Hull}
 \begin{lstlisting}
-boolean turnSameSide(Point[] polygon)
-{
-  Point u = subtract(polygon[1], polygon[0]);
-  Point v = subtract(polygon[2], polygon[1]);
-  double first = prodE(u ,v);
-  int n = polygon.length;
-  for(int i = 1; i < n; i++)
-  {
-    u = subtract(polygon[(i+1)%n], polygon[i]);
-    v = subtract(polygon[(i+2)%n], polygon[(i+1)%n]);
-    double pe = prodE(u, v);
-    if(Math.signum(first) * Math.signum(pe) < 0)
-      return false;
-  }
-  return true;
-}
-
-boolean convex(Point[] polygon)
-{
-  if(!turnSameSide(polygon)) {return false;}
-  int n = polygon.length;
-  Point l = subtract(polygon[1], polygon[0]);
-  Point r = subtract(polygon[n - 1], polygon[0]);
-  Point u = subtract(polygon[1], polygon[0]);
-  Point v = subtract(polygon[2], polygon[0]);
-  double last = prodE(u, v);
-  for(int i = 2; i < n - 1; i++)
-  {
-    u = subtract(polygon[i], polygon[0]);
-    v = subtract(polygon[i + 1], polygon[0]);
-    Point s = subtract(polygon[i], polygon[0]);
-    if(between(l, s, r))
-      return false;
-    double pe = prodE(u, v);
-    if(Math.signum(last) * Math.signum(pe) < 0)
-      return false;
-    last = pe;
-  }
-  return true;
-}
-
-double area(ArrayList<Point> polygon)
-{
-  double total = 0.0;
-  for(int i = 0; i < polygon.size(); i++)
-  {
-    int j = (i + 1) % polygon.size();
-    total += polygon.get(i).x * polygon.get(j).y-
-	      polygon.get(j).x * polygon.get(i).y;
-  }
-  return total / 2.0;
-}
-
-//Il faut ordonner les points dans le sens inverse des aiguilles d'une montre (traduit du portugais...
-boolean ear(int i, int j, int k, ArrayList<Point> polygon)
-{
-  int m;
-  Triangle t = new Triangle(polygon.get(i),
-                            polygon.get(j),
-                            polygon.get(k));
-  if(cw(t.p1, t.p2, t.p3))
-    return false;
-  for(m = 0; m < polygon.size(); m++)
-    if(m != i && m != j && m != k)
-      if(isInTriangle2(polygon.get(m), t))
-        return false;
-  return true;
-}
-\end{lstlisting}
-\subsubsection{Polygone convexe: Gift Wrapping}
-But: créer un polygône convexe comprenant un ensemble de points
-On "enroule une corde" autour des points. $O(n^2)$.
-\begin{lstlisting}
-public static List<Point> giftWrapping(ArrayList<Point> points)
-{
-  //Cherchons le point le plus a gauche
-  Point pos = points.get(0);
-  for(Point p: points)
-    if(pos.x > p.x)
-      pos = p;
-  //L'algo proprement dit
-  Point fin;
-  List<Point> result = new LinkedList<Point>();
-  do
-  {
-    result.add(pos);
-    fin = points.get(0);
-    for(int j = 1; j < points.size(); j++)
-      if (fin == pos || positionFromSegment(pos, fin, points.get(j)) < 0)
-        fin = points.get(j);
-    pos = fin;
-  } while(result.get(0) != fin);
-  return result;
-}
-\end{lstlisting}
-\subsubsection{Polygone convexe: Graham Scan {\footnotesize \textit{non-testé}}}
-Meilleure complexité (théoriquement)
-\begin{lstlisting}
-static Point firstP;
-Point[] convexHull(Point[] in, int n) {
-  Point[] hull = new Point[n];
+Point[] convexHull(Point[] points) {
+  // sort points by increasing x coordinates
+  Arrays.sort(points, new xComp());
+  // build upper chain
+  Point[] upChain = buildChain(points, 1);
+  // build lower chain
+  Point[] loChain = buildChain(points, -1);
+  Point[] hull = new Point[upChain.length + loChain.length - 2];
   int i;
-  int top;
-  if(n <= 3) {
-    for(i = 0; i < n; i++) {
-      hull[i] = in[i];
-    }
-    return hull;
+  // build convex hull from upper and lower chain
+  for(i = 0; i < upChain.length; i++) {
+    hull[i] = upChain[i];
   }
-  Arrays.sort(in, new leftlowerC());
-  firstP = in[0];
-  in=sort(Arrays.copyOfRange(in,1,in.length),in);	
-  hull[0] = firstP;
-  hull[1] = in[1];	
-  top = 1;
-  i = 2;
-  while(i <= n) {
-    if(!ccw(hull[top - 1], hull[top], in[i])) {
-      top--;
-    } else {
-      top++;
-      hull[top] = in[i];
-      i++;
-    }
+  for(int j = loChain.length - 2; j >= 1; j--) {
+    hull[i] = loChain[j];
   }
-  return Arrays.copyOfRange(hull, 0, top);
+  return hull;
 }
 
-Point[] sort(Point[] end, Point[] in) {
-  Point[] res = new Point[in.length + 1];
-  Arrays.sort(end, new smallerAngleC());
-  int i = 1;
-  for(Point p : end) {
-    res[i] = p;
-    i++;
-  }
-  res[0] = in[0];
-  res[res.length - 1] = in[0];
-  return res;
-}
-
-class smallerAngleC implements Comparator<Point>{
-  public int compare(Point p1, Point p2) {
-    if(collinear(firstP, p1, p2)) {
-      if(distance(firstP, p1) <= 
-         distance(firstP, p2)){
-        return -1;
-      } else {
-	return 1;
-      }
+Point[] buildChain(Point[] points, int sgn) {
+  Point[] S = new Point[points.length];
+  int k = 0;
+  S[k++] = points[0]; // push points[0]
+  S[k++] = points[1]; // push points[1]
+  // build chain
+  for(int i = 2; i < points.length; i++) {
+    //double orient = orient(S[k - 2], S[k - 1], points[i]);
+    while(k >= 2 && sgn * orient(S[k - 2], S[k - 1], points[i]) >= 0) {
+      S[k - 1] = null; // pop
+      k--;
     }
-    if(ccw(firstP, p1, p2)) {
-      return -1;
-    }
-    return 1;
-  }	
-}
-		
-class leftlowerC implements Comparator<Point> {
-  public int compare(Point p1, Point p2) {
-    if(p1.x < p2.x) {return -1;}
-    if(p1.x > p2.x) {return 1;}
-    if(p1.y < p2.y) {return -1;}
-    if(p1.y > p2.y) {return 1;}
-    return 0;
+    S[k++] = points[i]; // push points[i]
   }
-}
-
-boolean pointInPolygon(Point[] pol, Point p) {
-  boolean c = false;
-  int n = pol.length;
-  for(int i = 0, j = n - 1; i < n; j = i++)
-  { 
-    double r = (pol[j].x - pol[i].x) * (p.y - pol[i].y) / (pol[j].y - pol[i].y) + pol[i].x;
-    if ((((pol[i].y <= p.y) && (p.y < pol[j].y))  ||
-         ((pol[j].y <= p.y) && (p.y < pol[i].y))) &&         
-          (p.x < r))
-    {
-      c = !c;
-    }
-  }
-  return c;
+  return Arrays.copyOf(S, k);
 }
 \end{lstlisting}
