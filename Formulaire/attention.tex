@@ -3,8 +3,7 @@
 \begin{enumerate}
 	\item Lire \textbf{TOUS} les énoncés avant de commencer la moindre implémentation
 	\item Faire attention au copier-coller bête et méchant.
-	\item Surveiller les overflow. Parfois, un long peux régler pas mal de problèmes
-	\item Les $\beta$ a coté des titres signifient que le code n'a pas été testé et viens éventuellement du portugais
+	\item Surveiller les overflow. Parfois, un long peut régler pas mal de problèmes
 \end{enumerate}
  
 \subsection{Opérations sur les bits}
@@ -21,3 +20,22 @@
 	\item Least significant bit non nul de $n$: \lstinline{(n & (-n))}
 	\item Passage au négatif: \lstinline{0x7fffffff^n}
 \end{enumerate}
+
+\subsection{Table des complexités}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+n $\leq$ & Complexité max\\
+\hline
+$[10,11]$ & $O(n!),O(n^6)$ \\
+$[15,18]$ & $O(2^n n^2)$\\
+$[18,22]$ & $O(2^n n)$\\
+$100$ & $O(n^4)$\\
+$400$ & $O(n^3)$\\
+$2K$ & $O(n^2\log(n))$\\
+$10K$ & $O(n^2)$\\
+$1M$ & $O(n\log(n))$\\
+$10M$ & $O(n),O(\log(n)),O(1)$\\
+\hline
+\end{tabular}
+\end{center}

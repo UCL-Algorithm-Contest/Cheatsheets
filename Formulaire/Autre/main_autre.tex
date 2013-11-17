@@ -2,127 +2,154 @@
 \begin{center}
 	\includegraphics[width=0.7\linewidth]{whyuno.jpg}
 \end{center}
-\subsection{Strings {\footnotesize \textit{non-testé et non-relu}}}
+\subsection{Permutations, Combinaisons, Arrangements... {\footnotesize \textit{non-testé}}}
 \begin{lstlisting}
-int[] suffixArray(int[][] P) {
-  int[] SA = new int[P[0].length];
-  for(int i = 0; i < SA.length; i++) {
-    SA[P[P.length - 1][i]] = i;
-  }
-  return SA;
-}
-//O(n * log(n)), lcp[i] = lcp(SA[i - 1], SA[i]) 
-int[] lcpArray(int[] SA, int[][] P) {
-  int[] lcp = new int[SA.length]; 
-  for(int i = 1; i < SA.length; i++) {
-    lcp[i] = lcp(P, SA[i-1], SA[i]);
-  }
-  return lcp;
-}	
-//O(log(n)), calcula lcp entre S[x...n], S[y...n]
-//lcp(SA[i],SA[j]) = min(lcp(SA[i], SA[i+1]), ... , lcp(SA[j-1], S A[j])) =>  RMQ pode reduzir a O(1)
-static int lcp(int[][] P, int x, int y) { 
-  int N = P[0].length;
-  int M = P.length;
-  if(x == y) {return N - x;}
-  int lcp = 0;
-  for(int k=M-1; k>=0 && x < N && y < N; k--) {
-    if (P[k][x] == P[k][y]) {
-      x += 1 << k;
-      y += 1 << k;
-      lcp += 1 << k;
-    }
-  }
-  return lcp;
-}
-//O(n * log(n)^2), calcula a matriz P
-static int[][] buildP(String s) {
-  int N = s.length();
-  int log = N == 1 ? 2 : ((int)(Math.log(N-1) / 
-                              Math.log(2))) + 3; 
-  int[][] P = new int[log][N];
-  for (int i = 0; i < N; i++) {
-    P[0][i] = s.charAt(i) - 'a';
-  }
-  Entry[] L = new Entry[N];
-  int stp = 1;
-  for (int cnt = 1; (cnt >> 1) < N; cnt <<= 1) {
-    for (int i = 0; i < N; i++)  {
-      L[i] = new Entry(P[stp - 1][i], 
-                      (i + cnt) < N ? 
-                       P[stp-1][i+cnt] : -1, i);
-    }
-    Arrays.sort(L); // Acelera-se usando O(n)
-    for (int i = 0; i < N; i ++) {
-      P[stp][L[i].p] = i > 0 && 
-      L[i].nr0 == L[i - 1].nr0 && 
-      L[i].nr1 == L[i - 1].nr1 ? 
-      P[stp][L[i - 1].p] : i;
-    }
-    stp++;
-  }
-  return P;
+void nextPerm(int[] p) {
+  int n = p.length;
+  int k = n - 2;
+  while(k >= 0 && p[k] >= p[k + 1]) {k--;}
+  int l = n - 1;
+  while(p[k] >= p[l]) {l--;}
+  swap(p, k, l);
+  reverse(p, k + 1, n);
 }
 
-class Entry implements Comparable<Entry>{
-  int nr0, nr1, p;
-  public Entry(int nr0, int nr1, int p) {
-    this.nr0 = nr0;
-    this.nr1 = nr1;
-    this.p = p;            
-  }
-  public int compareTo(Entry o) {
-    if (nr0 != o.nr0) {
-      return nr0 < o.nr0 ? -1 : 1;
-    }
-    if (nr1 != o.nr1) {
-      return nr1 < o.nr1 ? -1 : 1;
-    }
-    return 0;
+LinkedList<Integer> getIPermutation(int n, int index) {
+  LeftRightArray lr = new LeftRightArray(n);
+  lr.freeAll();
+  LinkedList<Integer> perm = new 
+  LinkedList<Integer>();
+  getPermutation(lr, index, fact(n), perm);
+  return perm;
+}
+
+void getPermutation(LeftRightArray lr, int i, long fact, LinkedList<Integer> perm) {
+  int n = lr.size();
+  if(n == 1) {
+    perm.add(lr.freeIndex(0, false));
+  } else {
+    fact /= n;
+    int j = (int)(i / fact);
+    perm.add(lr.freeIndex(j, true));
+    i -= j * fact;
+    getPermutation(lr, i, fact, perm);
   }
 }
 
-String maxStrRepeatedKTimes(String s, int k) {
-  int[][] P = buildP(s);
-  int[] SA = suffixArray(P);
-  int n = s.length();
-  int max = Integer.MIN_VALUE;
+int[] getICombinadic(int n, int k, long i) { 
+  int[] comb = new int[k];
   int j = 0;
-  for(int i = 0; i <= n - k; i++) {
-    int lcp = lcp(P, SA[i], SA[i + k - 1]);
-    if(lcp > max) {
-      max = lcp;
-      j = SA[i];
+  for(int z = 1; z <= n; z++) {
+    if ( k == 0 ) {
+      break;
+    }
+    long threshold = C(n - z, k - 1);
+    if (i < threshold) {
+      comb[j] = z - 1;
+      j++;
+      k = k - 1;
+    } else if (i >= threshold) {
+      i = i - threshold;
     }
   }
-  return s.substring(j, j + max);
-}
-	
-String minLexicographicRotation(String s) {
-  int n = s.length();
-  s += s;
-  int[][] P = buildP(s);
-  int[] SA = suffixArray(P);
-  int i = 0;
-  while(!(0 <= SA[i] && SA[i] < n)) {
-    i++;
-  }
-  return s.substring(SA[i], SA[i] + n);
+  return comb;
 }
 
-class MaxLexConc implements Comparator<String> {
- public int compare(String x, String y) {
-    String xy = x + y;
-    String yx = y + x;
-    if(xy.compareTo(yx) < 0 || 
-      (xy.equals(yx) && x.length()<y.length())) {
-      return 1; 
+void combinations(int n, int k) {
+  combinations(n, 0, new int[k], 0);
+}
+
+void combinations(int n, int j, int[] comb, int k) {
+  if(k == comb.length) {
+    System.out.println(Arrays.toString(comb));
+  } else {
+    for(int i = j; i < n; i++) {
+      comb[k] = i;
+      combinations(n, i + 1, comb, k + 1);
     }
-    return -1; 
-  } // menor: basta trocar -1 e 1
+  }
+}
+void subsets(int[] set) {
+  int n = (1 << set.length);
+  for(int i = 0; i < n; i++) {
+    int[] sub = new int[Integer.bitCount(i)];
+    int k = 0, j = 0;
+    while((1 << j) <= i) {
+      if((i & (1 << j)) == (1 << j)) {
+        sub[k++] = set[j];
+      }
+      j++;  
+    }
+    System.out.println(Arrays.toString(sub));
+  }
 }
 \end{lstlisting}
-\subsubsection{Palyndrome maximum}
+\subsection{Décomposition en fractions unitaires {\footnotesize \textit{non-testé}}}
+Ecrire $0<\frac{p}{q}<1$ sous forme de sommes de $\frac{1}{k}$
+\begin{lstlisting}
+void expandUnitFrac(long p, long q)
+{
+	if(p != 0)
+	{
+		long i = q % p == 0 ? q/p : q/p + 1;
+		System.out.println("1/" + i);
+		expandUnitFrac(p*i-q, q*i);
+	}
+}
+\end{lstlisting}
+\subsection{Combinaison}
+Nombre de combinaison de taille $k$ parmi $n$ ($C^k_n$)
+
+Cas spécial: $C^k_n\ mod\ 2 = n\oplus m$
+\begin{lstlisting}
+long C(int n, int k)
+{
+	double r = 1;
+	k = Math.min(k, n - k);
+	for(int i = 1; i <= k; i++)
+		r /= i;
+	for(int i = n; i >= n - k + 1; i--)
+		r *= i;
+	return Math.round(r);
+}
+\end{lstlisting}
+%TODO: Nombres de Catalan
+\subsection{Suite de fibonacci {\footnotesize \textit{non-testé}}}
+$f(0) = 0$, $f(1) = 1$ et $f(n) = f(n - 1) + f(n - 2)$.\\
+On a la relation suivante, qui permet de calculer tout nombre de la suite en $O(log(n))$:\\
+$$\begin{pmatrix}
+1 & 1\\
+1 & 0
+\end{pmatrix}^n=\begin{pmatrix}
+f_{n+1} & f_n\\
+f_n & f_{n-1}
+\end{pmatrix}$$
+\begin{lstlisting}
+long fib(n)
+{
+	int i=1; int h=1; int j=0; int k=0; int t;
+	while(n > 0)
+	{
+		if(n % 2 == 1)
+		{
+			t = j * h;
+			j=i * h + j * k + t; 
+			i=i * k + t;
+    		}
+   		t = h * h;
+   		h = 2 * k * h + t;
+   		k = k * k + t;
+	}
+	n = (int)n / 2; 
+	return j;
+}
+\end{lstlisting}
+
+\subsection{Strings {\footnotesize \textit{non-testé et non-relu}}}
+\begin{lstlisting}
+
+\end{lstlisting}
+\subsubsection{Palindrome maximum}
 \begin{lstlisting}
 int[] calculateAtCenters(String s) {
   int n = s.length();
