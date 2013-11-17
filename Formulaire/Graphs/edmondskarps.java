@@ -31,7 +31,7 @@ LinkedList<Edge> findAugmentingPath(TreeMap<Integer,Integer>[] g, int s, int t) 
   int cur = t;
   while(cur != s) {
     path.add(parent[cur]);
-    cur = parent[cur].orig;
+    cur = parent[cur].o;
   }
   return path;
 }
@@ -42,14 +42,14 @@ int applyPath(TreeMap<Integer, Integer>[] g, LinkedList<Edge> path) {
     minCapacity = Math.min(minCapacity, e.w);
   for(Edge e : path) {
     if(minCapacity == e.w)
-      g[e.orig].remove(e.dest);
+      g[e.o].remove(e.d);
     else
-      g[e.orig].put(e.dest, e.w - minCapacity);
-    Integer backCapacity = g[e.dest].get(e.orig);
+      g[e.o].put(e.d, e.w - minCapacity);
+    Integer backCapacity = g[e.d].get(e.o);
     if(backCapacity == null)
-      g[e.dest].put(e.orig, minCapacity);
+      g[e.d].put(e.o, minCapacity);
     else
-      g[e.dest].put(e.orig, backCapacity+minCapacity);
+      g[e.d].put(e.o, backCapacity+minCapacity);
   }
   return minCapacity;
 }

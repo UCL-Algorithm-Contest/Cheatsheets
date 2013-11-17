@@ -10,14 +10,14 @@ double prim(LinkedList<Edge>[] g) {
     // poll the minimum weight edge in PQ
     Edge minE = PQ.poll();
     // if its endpoint in not in the tree, add it
-    if(!inTree[minE.dest]) {
+    if(!inTree[minE.d]) {
       // add edge minE to the MST
-      inTree[minE.dest] = true;
+      inTree[minE.d] = true;
       weight += minE.w; 
       size++;
       // add edge leading to new endpoints to the PQ
-      for(Edge e : g[minE.dest]) 
-        if(!inTree[e.dest]) PQ.add(e);
+      for(Edge e : g[minE.d])
+        if(!inTree[e.d]) PQ.add(e);
     }
   }
   return weight;
