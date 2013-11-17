@@ -43,30 +43,25 @@ Si pas de cycle, la solution est dans $d[|V|-1]$. Si cycle il y a, $d[|V|-1]=d[V
 $O(|V||E|)$.\\
 
 \begin{lstlisting}
-double[] bellmanFord(LinkedList<Edge>[] gt, int v)
-{
-  int n = gt.length;
-  double[][] d = new double[n][n];
-  for(int u = 0; u < n; u++)
-    d[0][u] = u == v ? 0 : Double.POSITIVE_INFINITY;
-  for(int i = 1; i < n; i++)
-  {
-    for(int u = 0; u < n; u++)
-    {
-      double min = d[i - 1][u];
-      for(Edge e : gt[u])
-        min = Math.min(min, d[i - 1][e.dest] + e.w);
-      d[i][u] = min;
-    }
-  }
-  return d[n - 1];
+static double[] bellmanFord(LinkedList<Edge> gt, int v, int n) {
+  double[] dist = new double[n];
+  Arrays.fill(dist, Double.POSITIVE_INFINITY);
+  dist[v] = 0;
+  for(int i=0; i < n-1; i++)
+    for(Edge e : gt)
+      if(dist[e.o] + e.w < dist[e.d])
+        dist[e.d] = dist[e.o] + e.w;
+  for(Edge e : gt)
+    if(dist[e.o] + e.w < dist[e.d])
+      return null;
+  return dist;
 }
 \end{lstlisting}
 \begin{lstlisting}
-static boolean spfa (LinkedList<Edge>[] g, int s) {
+static double[] spfa (LinkedList<Edge>[] g, int s) {
   int n = g.length;
-  int[] dist = new int[n];
-  Arrays.fill(dist, Integer.MAX_VALUE);
+  double[] dist = new double[n];
+  Arrays.fill(dist, Double.POSITIVE_INFINITY);
   Queue<Integer> q = new LinkedList<Integer>();
   BitSet inQueue = new BitSet(n);
   int[] timesIn = new int[n];
@@ -86,14 +81,14 @@ static boolean spfa (LinkedList<Edge>[] g, int s) {
           inQueue.set(v);
           timesIn[v]++;
           if (timesIn[v] >= n) {
-            return true;
+            return null; // Infinite loop
           }
         }
       }
     }
   }
-  return false;
-}
+  return dist;
+ }
 \end{lstlisting}
 \subsection{Floyd-Warshall}
 Plus court chemin de tout les noeuds à tout les autres. Prend en argument la matrice d'adjacence. $O(|V|^3)$ en temps et $O(|V|^2)$ en mémoire.\\
