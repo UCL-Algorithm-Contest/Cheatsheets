@@ -3,82 +3,8 @@ Shortest path from a node $v$ to other nodes. Graph must not have any negative w
 
 \lstinputlisting{Graphes/dijkstra.java}
 \subsection{Bellman-Ford\label{BellmanFord}}
-Plus court chemin d'un noeud $v$ à tout les autres. Le graphe peut avoir des cycles de poids négatif, mais alors l'algorithme ne retourne pas les chemins les plus courts, mais retourne l'existence de tels cycles.\\
-$d[i][u] = \text{shortest path from $v$ to $u$ with $\leq i$ edge}$\\
-$d[0][v] = 0$ \\
-$d[0][u] = \infty \quad \text{for $u \neq v$}$\\
-$d[i][u] = \min \{ 
-d[i - 1][u], \quad
-\min_{(s, u) \in E} d[i - 1][s] + w(s, u) \}$\\
-Si pas de cycle, la solution est dans $d[|V|-1]$. Si cycle il y a, $d[|V|-1]=d[V]$.\\
-$O(|V||E|)$.\\
-
-\begin{lstlisting}
-static double[] bellmanFord(LinkedList<Edge> gt, int v, int n) {
-  double[] dist = new double[n];
-  Arrays.fill(dist, Double.POSITIVE_INFINITY);
-  dist[v] = 0;
-  for(int i=0; i < n-1; i++)
-    for(Edge e : gt)
-      if(dist[e.o] + e.w < dist[e.d])
-        dist[e.d] = dist[e.o] + e.w;
-  for(Edge e : gt)
-    if(dist[e.o] + e.w < dist[e.d])
-      return null;
-  return dist;
-}
-\end{lstlisting}
-\begin{lstlisting}
-static double[] spfa (LinkedList<Edge>[] g, int s) {
-  int n = g.length;
-  double[] dist = new double[n];
-  Arrays.fill(dist, Double.POSITIVE_INFINITY);
-  Queue<Integer> q = new LinkedList<Integer>();
-  BitSet inQueue = new BitSet(n);
-  int[] timesIn = new int[n];
-
-  dist[s] = 0;
-  q.add(s);
-  inQueue.set(s);
-  timesIn[s]++;
-  while (!q.isEmpty()) {
-    int cur = q.poll(); inQueue.clear(cur);
-    for (Edge next : g[cur]) {
-      int v = next.d, w = next.w;
-      if (dist[cur] + w < dist[v]) {
-        dist[v] = dist[cur] + w;
-        if (!inQueue.get(v)) {
-          q.add(v);
-          inQueue.set(v);
-          timesIn[v]++;
-          if (timesIn[v] >= n) {
-            return null; // Infinite loop
-          }
-        }
-      }
-    }
-  }
-  return dist;
- }
-\end{lstlisting}
+Shortest path from a node $v$ to other nodes. Graph can have negative weighted cycles: Bellman-Ford won't give the correct shortest path, but will warn that a negative cycle exists. 
+\lstinputlisting{Graphes/bellmanford.java}
 \subsection{Floyd-Warshall}
-Plus court chemin de tout les noeuds à tout les autres. Prend en argument la matrice d'adjacence. $O(|V|^3)$ en temps et $O(|V|^2)$ en mémoire.\\
-Le graphe contient des cycles de poids négatif ssi $result[v][v]<0$.\\
-
-\begin{lstlisting}
-double[][] floydWarshall(double[][] A)
-{
-  int n = A.length;
-  // initialization: base case
-  double[][] d = new double[n][n];
-  for(int v = 0; v < n; v++)
-    for(int u = 0; u < n; u++)
-      d[v][u] = A[v][u];
-
-  for(int k = 0; k < n; k++)
-    for(int v = 0; v < n; v++)
-      for(int u = 0; u < n; u++)
-        d[v][u] = Math.min(d[v][u], d[v][k] + d[k][u]);
-  return d;
-}
-\end{lstlisting}
+Shortest path from a node $v$ to other nodes. Graph can have negative weighted cycles: Floyd-Warshall won't give the correct shortest path, but will warn that a negative cycle exists. Negative weighted cycles exists iif $result[v][v]<0$. $O(|V|^3)$ in time and $O(|V|^2)$ in memory.\\
+\lstinputlisting{Graphes/floydwarshall.java}
