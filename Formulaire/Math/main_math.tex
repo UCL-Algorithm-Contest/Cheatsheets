@@ -14,7 +14,7 @@ void nextPerm(int[] p) {
 LinkedList<Integer> getIPermutation(int n, int index) {
   LeftRightArray lr = new LeftRightArray(n);
   lr.freeAll();
-  LinkedList<Integer> perm = new 
+  LinkedList<Integer> perm = new
   LinkedList<Integer>();
   getPermutation(lr, index, fact(n), perm);
   return perm;
@@ -33,7 +33,7 @@ void getPermutation(LeftRightArray lr, int i, long fact, LinkedList<Integer> per
   }
 }
 
-int[] getICombinadic(int n, int k, long i) { 
+int[] getICombinadic(int n, int k, long i) {
   int[] comb = new int[k];
   int j = 0;
   for(int z = 1; z <= n; z++) {
@@ -75,7 +75,7 @@ void subsets(int[] set) {
       if((i & (1 << j)) == (1 << j)) {
         sub[k++] = set[j];
       }
-      j++;  
+      j++;
     }
     System.out.println(Arrays.toString(sub));
   }
@@ -99,15 +99,14 @@ Number of combinations of $k$ elements within $n$ ones ($C^k_n$)
 
 Special case : $C^k_n\ mod\ 2 = n\oplus m$
 \begin{lstlisting}
-long C(int n, int k)
-{
-	double r = 1;
-	k = Math.min(k, n - k);
-	for(int i = 1; i <= k; i++)
-		r /= i;
-	for(int i = n; i >= n - k + 1; i--)
-		r *= i;
-	return Math.round(r);
+long C(int n, int k) {
+  double r = 1;
+  k = Math.min(k, n - k);
+  for(int i = 1; i <= k; i++)
+  r /= i;
+  for(int i = n; i >= n - k + 1; i--)
+  r *= i;
+  return Math.round(r);
 }
 \end{lstlisting}
 \subsubsection{Catalan numbers}
@@ -130,23 +129,20 @@ f_{n+1} & f_n\\
 f_n & f_{n-1}
 \end{pmatrix}$$
 \begin{lstlisting}
-long fib(n)
-{
-	int i=1; int h=1; int j=0; int k=0; int t;
-	while(n > 0)
-	{
-		if(n % 2 == 1)
-		{
-			t = j * h;
-			j=i * h + j * k + t; 
-			i=i * k + t;
-    		}
-   		t = h * h;
-   		h = 2 * k * h + t;
-   		k = k * k + t;
-	}
-	n = (int)n / 2; 
-	return j;
+long fib(n) {
+  int i=1; int h=1; int j=0; int k=0; int t;
+  while(n > 0) {
+    if(n % 2 == 1) {
+      t = j * h;
+      j=i * h + j * k + t;
+      i=i * k + t;
+    }
+    t = h * h;
+    h = 2 * k * h + t;
+    k = k * k + t;
+  }
+  n = (int)n / 2;
+  return j;
 }
 \end{lstlisting}
 \subsection{Cycle finding}
