@@ -1,5 +1,5 @@
 \section{Math}
-\subsection{Permutations, Combinaisons, Arrangements... {\footnotesize \textit{non-testé}}}
+\subsection{Permutations, Combinations, Arrangements... {\footnotesize \textit{untested}}}
 \begin{lstlisting}
 void nextPerm(int[] p) {
   int n = p.length;
@@ -81,8 +81,8 @@ void subsets(int[] set) {
   }
 }
 \end{lstlisting}
-\subsection{Décomposition en fractions unitaires {\footnotesize \textit{non-testé}}}
-Ecrire $0<\frac{p}{q}<1$ sous forme de sommes de $\frac{1}{k}$
+\subsection{Decomposition in unit fractions {\footnotesize \textit{untested}}}
+Write $0<\frac{p}{q}<1$ as a sum of $\frac{1}{k}$
 \begin{lstlisting}
 void expandUnitFrac(long p, long q)
 {
@@ -94,10 +94,10 @@ void expandUnitFrac(long p, long q)
 	}
 }
 \end{lstlisting}
-\subsection{Combinaison}
-Nombre de combinaison de taille $k$ parmi $n$ ($C^k_n$)
+\subsection{Combination}
+Number of combinations of $k$ elements within $n$ ones ($C^k_n$)
 
-Cas spécial: $C^k_n\ mod\ 2 = n\oplus m$
+Special case : $C^k_n\ mod\ 2 = n\oplus m$
 \begin{lstlisting}
 long C(int n, int k)
 {
@@ -111,12 +111,16 @@ long C(int n, int k)
 }
 \end{lstlisting}
 %TODO: Nombres de Catalan
-\subsection{Suite de fibonacci {\footnotesize \textit{non-testé}}}
-$f(0) = 0$, $f(1) = 1$ et $f(n) = f(n - 1) + f(n - 2)$
-
-Valeur réelle mais avec des flottant: $f(n)=\frac{1}{\sqrt{5}}((\frac{1+\sqrt{5}}{2})^n-(-\frac{2}{1+\sqrt{5}})^n)$
-
-En fait, $f(n)$ est toujours l'entier le plus proche de $f_{approx}(n)=\frac{1}{\sqrt{5}}(\frac{1+\sqrt{5}}{2})^n$
+\subsection{Fibonacci series {\footnotesize \textit{untested}}}
+$f(0) = 0$, $f(1) = 1$ et $f(n) = f(n - 1) + f(n - 2)$.\\
+The following relation enables us to compute every number of the series in $O(log(n))$ :\\
+$$\begin{pmatrix}
+1 & 1\\
+1 & 0
+\end{pmatrix}^n=\begin{pmatrix}
+f_{n+1} & f_n\\
+f_n & f_{n-1}
+\end{pmatrix}$$
 \begin{lstlisting}
 long fib(n)
 {
@@ -137,7 +141,6 @@ long fib(n)
 	return j;
 }
 \end{lstlisting}
-
 \subsection{Number theory}
 \subsubsection{Euler phi}
 $\phi(N) = N \times \prod_{p | N} (1 - \frac{1}{p}) = \#\{k < N | \gcd(k,N) = 1\}$
