@@ -1,31 +1,31 @@
-\section{Remarques}
-\subsection{Attention!}
+\section{Remarks}
+\subsection{Warning!}
 \begin{enumerate}
-	\item Lire \textbf{TOUS} les énoncés avant de commencer la moindre implémentation
-	\item Faire attention au copier-coller bête et méchant.
-	\item Surveiller les overflow. Parfois, un long peut régler pas mal de problèmes
+	\item Read every statement!
+	\item Do not copy-paste without thinking about it.
+	\item Be careful of overflows! Use long! 
 \end{enumerate}
  
-\subsection{Opérations sur les bits}
+\subsection{Operations on bits}
 \begin{enumerate}
-	\item Vérification parité de $n$: \lstinline{(n & 1) == 0}
+	\item Check parity of $n$: \lstinline{(n & 1) == 0}
 	\item $2^n$: \lstinline|1 << n|.
-	\item Tester si le $i$ème bit de $n$ est $0$: \lstinline{(n & 1 << i) != 0}
-	\item Mettre le $i$ème bit de $n$ à 0: \lstinline{n &= ~(1 << i)}
-	\item Mettre le $i$ème bit de $n$ à 1: \lstinline{n |= (1 << i)}
+	\item Test of the $i$th bit of $n$ is $0$: \lstinline{(n & 1 << i) != 0}
+	\item Set the $i$th bit of $n$ at 0: \lstinline{n &= ~(1 << i)}
+	\item Set the $i$th bit of $n$ at 1: \lstinline{n |= (1 << i)}
 	\item Union: \lstinline{a | b}
 	\item Intersection: \lstinline{a & b}
-	\item Soustraction bits: \lstinline{a & ~b}
-	\item Vérifier si $n$ est une puissance de 2: \lstinline{(n & (n-1) == 0)}
-	\item Least significant bit non nul de $n$: \lstinline{(n & (-n))}
-	\item Passage au négatif: \lstinline{0x7fffffff^n}
+	\item Subtraction bits: \lstinline{a & ~b}
+	\item Verify if $n$ is a power of 2: \lstinline{(n & (n-1) == 0)}
+	\item Least significant bit not null of $n$: \lstinline{(n & (-n))}
+	\item Negate: \lstinline{0x7fffffff^n}
 \end{enumerate}
 
-\subsection{Table des complexités}
+\subsection{Complexity table}
 \begin{center}
 \begin{tabular}{|c|c|}
 \hline
-n $\leq$ & Complexité max\\
+n $\leq$ & Maximum complexity\\
 \hline
 $[10,11]$ & $O(n!),O(n^6)$ \\
 $[15,18]$ & $O(2^n n^2)$\\
