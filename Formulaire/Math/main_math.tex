@@ -141,17 +141,35 @@ long fib(n)
 	return j;
 }
 \end{lstlisting}
+\subsection{Cycle finding}
+\begin{lstlisting}
+int[] floydCycleFinding (int x0) {
+  int tortoise = f(x0), hare = f(f(x0));
+  while (tortoise != hare) {
+    tortoise = f(tortoise);
+    hare = f(f(hare)); }
+  int mu = 0; hare = x0; // first
+  while (tortoise != hare) {
+    tortoise = f(tortoise); hare = f(hare); mu++; }
+  int lambda = 1; hare = f(tortoise); // length
+  while (tortoise != hare) {
+    hare = f(hare); lambda++; }
+  return new int[] {mu, lambda};
+}
+\end{lstlisting}
 \subsection{Number theory}
-\subsection{Trivialité}
+\subsubsection{Misc}
+\begin{lstlisting}
 long gcd (long a, long b) {
-    return (b == 0) ? a : gcd(b, a % b);
+  return (b == 0) ? a : gcd(b, a % b);
 }
 long lcm (long a, long b) {
-    return a * (b / gcd(a,b));
+  return a * (b / gcd(a,b));
 }
 long modInverse (long a, long b) {
-    return big(a).modInverse(big(b)).longValue();
+  return big(a).modInverse(big(b)).longValue();
 }
+\end{lstlisting}
 \subsubsection{Euler phi}
 $\phi(N) = N \times \prod_{p | N} (1 - \frac{1}{p}) = \#\{k < N | \gcd(k,N) = 1\}$
 \begin{lstlisting}
@@ -187,7 +205,7 @@ static int extendedEuclid(int a, int b) {
   return d;
 }
 \end{lstlisting}
-\subsubsection{Théorème des restes chinois}
+\subsubsection{Chinese remainder theorem}
 \begin{lstlisting}
 static long[] chinese (long[] b, long[] m) {
   long x = b[0], l = m[0];
