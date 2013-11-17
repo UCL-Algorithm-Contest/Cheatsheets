@@ -88,10 +88,8 @@ int[][] suffixOrder(String s) {
  }
  return so;
 }
-\end{lstlisting}
 
-Calcule le Suffix Array pour un $so$ donné:\ \newline
-\begin{lstlisting}
+//Calcule le Suffix Array pour un so donne:
 int[] suffixArray(int[][] so) {
   int[] sa = new int[so[0].length];
   for(int j = 0; j < so[0].length; j++) {
@@ -99,10 +97,8 @@ int[] suffixArray(int[][] so) {
   }
   return sa;
 }
-\end{lstlisting}
 
-Retourne le plus long préfixe commun de $suf_j$(le suffixe de s commencant à j = s.substr(j)) et $suf_k$ pour un $so$ donné:\ \newline
-\begin{lstlisting}
+//Retourne le plus long prefixe commun de suf_j (le suffixe de s commencant a j = s.substr(j)) et suf_k pour un so donne:
 int lcp(int[][] so, int j, int k) {
   int lcp = 0;
   for(int i = so.length - 1; i >= 0; i--) {
@@ -113,5 +109,44 @@ int lcp(int[][] so, int j, int k) {
     }
   }
   return lcp;
+}
+
+//Quelques exemples
+String maxStrRepeatedKTimes(String s, int k) {
+  int[][] so = suffixOrder(s);
+  int[] SA = suffixArray(so);
+  int n = s.length();
+  int max = Integer.MIN_VALUE;
+  int j = 0;
+  for(int i = 0; i <= n - k; i++) {
+    int lcp = lcp(so, SA[i], SA[i + k - 1]);
+    if(lcp > max) {
+      max = lcp;
+      j = SA[i];
+    }
+  }
+  return s.substring(j, j + max);
+}
+	
+String minLexicographicRotation(String s) {
+  int n = s.length();
+  s += s;
+  int[] SA = suffixArray(suffixOrder(s));
+  int i = 0;
+  while(!(0 <= SA[i] && SA[i] < n)) {
+    i++;
+  }
+  return s.substring(SA[i], SA[i] + n);
+}
+
+class MaxLexConc implements Comparator<String> {
+ public int compare(String x, String y) {
+    String xy = x + y;
+    String yx = y + x;
+    if(xy.compareTo(yx) < 0 || 
+      (xy.equals(yx) && x.length()<y.length())) {
+      return 1; 
+    }
+    return -1; 
 }
 \end{lstlisting}

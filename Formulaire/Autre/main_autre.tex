@@ -115,11 +115,15 @@ long C(int n, int k)
 \end{lstlisting}
 %TODO: Nombres de Catalan
 \subsection{Suite de fibonacci {\footnotesize \textit{non-testé}}}
-$f(0) = 0$, $f(1) = 1$ et $f(n) = f(n - 1) + f(n - 2)$
-
-Valeur réelle mais avec des flottant: $f(n)=\frac{1}{\sqrt{5}}((\frac{1+\sqrt{5}}{2})^n-(-\frac{2}{1+\sqrt{5}})^n)$
-
-En fait, $f(n)$ est toujours l'entier le plus proche de $f_{approx}(n)=\frac{1}{\sqrt{5}}(\frac{1+\sqrt{5}}{2})^n$
+$f(0) = 0$, $f(1) = 1$ et $f(n) = f(n - 1) + f(n - 2)$.\\
+On a la relation suivante, qui permet de calculer tout nombre de la suite en $O(log(n))$:\\
+$$\begin{pmatrix}
+1 & 1\\
+1 & 0
+\end{pmatrix}^n=\begin{pmatrix}
+f_{n+1} & f_n\\
+f_n & f_{n-1}
+\end{pmatrix}$$
 \begin{lstlisting}
 long fib(n)
 {
@@ -142,125 +146,9 @@ long fib(n)
 \end{lstlisting}
 \subsection{Strings {\footnotesize \textit{non-testé et non-relu}}}
 \begin{lstlisting}
-int[] suffixArray(int[][] P) {
-  int[] SA = new int[P[0].length];
-  for(int i = 0; i < SA.length; i++) {
-    SA[P[P.length - 1][i]] = i;
-  }
-  return SA;
-}
-//O(n * log(n)), lcp[i] = lcp(SA[i - 1], SA[i]) 
-int[] lcpArray(int[] SA, int[][] P) {
-  int[] lcp = new int[SA.length]; 
-  for(int i = 1; i < SA.length; i++) {
-    lcp[i] = lcp(P, SA[i-1], SA[i]);
-  }
-  return lcp;
-}	
-//O(log(n)), calcula lcp entre S[x...n], S[y...n]
-//lcp(SA[i],SA[j]) = min(lcp(SA[i], SA[i+1]), ... , lcp(SA[j-1], S A[j])) =>  RMQ pode reduzir a O(1)
-static int lcp(int[][] P, int x, int y) { 
-  int N = P[0].length;
-  int M = P.length;
-  if(x == y) {return N - x;}
-  int lcp = 0;
-  for(int k=M-1; k>=0 && x < N && y < N; k--) {
-    if (P[k][x] == P[k][y]) {
-      x += 1 << k;
-      y += 1 << k;
-      lcp += 1 << k;
-    }
-  }
-  return lcp;
-}
-//O(n * log(n)^2), calcula a matriz P
-static int[][] buildP(String s) {
-  int N = s.length();
-  int log = N == 1 ? 2 : ((int)(Math.log(N-1) / 
-                              Math.log(2))) + 3; 
-  int[][] P = new int[log][N];
-  for (int i = 0; i < N; i++) {
-    P[0][i] = s.charAt(i) - 'a';
-  }
-  Entry[] L = new Entry[N];
-  int stp = 1;
-  for (int cnt = 1; (cnt >> 1) < N; cnt <<= 1) {
-    for (int i = 0; i < N; i++)  {
-      L[i] = new Entry(P[stp - 1][i], 
-                      (i + cnt) < N ? 
-                       P[stp-1][i+cnt] : -1, i);
-    }
-    Arrays.sort(L); // Acelera-se usando O(n)
-    for (int i = 0; i < N; i ++) {
-      P[stp][L[i].p] = i > 0 && 
-      L[i].nr0 == L[i - 1].nr0 && 
-      L[i].nr1 == L[i - 1].nr1 ? 
-      P[stp][L[i - 1].p] : i;
-    }
-    stp++;
-  }
-  return P;
-}
 
-class Entry implements Comparable<Entry>{
-  int nr0, nr1, p;
-  public Entry(int nr0, int nr1, int p) {
-    this.nr0 = nr0;
-    this.nr1 = nr1;
-    this.p = p;            
-  }
-  public int compareTo(Entry o) {
-    if (nr0 != o.nr0) {
-      return nr0 < o.nr0 ? -1 : 1;
-    }
-    if (nr1 != o.nr1) {
-      return nr1 < o.nr1 ? -1 : 1;
-    }
-    return 0;
-  }
-}
-
-String maxStrRepeatedKTimes(String s, int k) {
-  int[][] P = buildP(s);
-  int[] SA = suffixArray(P);
-  int n = s.length();
-  int max = Integer.MIN_VALUE;
-  int j = 0;
-  for(int i = 0; i <= n - k; i++) {
-    int lcp = lcp(P, SA[i], SA[i + k - 1]);
-    if(lcp > max) {
-      max = lcp;
-      j = SA[i];
-    }
-  }
-  return s.substring(j, j + max);
-}
-	
-String minLexicographicRotation(String s) {
-  int n = s.length();
-  s += s;
-  int[][] P = buildP(s);
-  int[] SA = suffixArray(P);
-  int i = 0;
-  while(!(0 <= SA[i] && SA[i] < n)) {
-    i++;
-  }
-  return s.substring(SA[i], SA[i] + n);
-}
-
-class MaxLexConc implements Comparator<String> {
- public int compare(String x, String y) {
-    String xy = x + y;
-    String yx = y + x;
-    if(xy.compareTo(yx) < 0 || 
-      (xy.equals(yx) && x.length()<y.length())) {
-      return 1; 
-    }
-    return -1; 
-  } // menor: basta trocar -1 e 1
-}
 \end{lstlisting}
-\subsubsection{Palyndrome maximum}
+\subsubsection{Palindrome maximum}
 \begin{lstlisting}
 int[] calculateAtCenters(String s) {
   int n = s.length();
