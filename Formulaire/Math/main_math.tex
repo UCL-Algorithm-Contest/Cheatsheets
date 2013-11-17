@@ -110,7 +110,15 @@ long C(int n, int k)
 	return Math.round(r);
 }
 \end{lstlisting}
-%TODO: Nombres de Catalan
+\subsubsection{Catalan numbers}
+$\cat(n) = \frac{C_n^{2n}}{n+1}$ $\cat(n+1) = \frac{(2n+2)(2n+1)}{(n+2)(n+1)}\cat(n)$
+\begin{itemize}
+  \item distinct binary trees with $n$ vertices.
+  \item expressions containing $n$ pairs of parentheses correctly matched (e.g. $n=3$ $()()(),()(()),(())(),((())),(()())$).
+  \item parenthesize $n+1$ factors (e.g. $n=3$ $(ab)(cd),a(b(cd)),((ab)c)(d),(a(bc))(d),a((bc)d)$).
+  \item triangulate a convex polygon of $n+2$ sides.
+  \item number of monotonic paths along the edge of a $n\times n$ grid which do not pass above de diagonal.
+\end{itemize}
 \subsection{Fibonacci series {\footnotesize \textit{untested}}}
 $f(0) = 0$, $f(1) = 1$ et $f(n) = f(n - 1) + f(n - 2)$.\\
 The following relation enables us to compute every number of the series in $O(log(n))$ :\\
