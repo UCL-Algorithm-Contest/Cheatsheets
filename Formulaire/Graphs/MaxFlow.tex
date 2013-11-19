@@ -4,7 +4,6 @@ Path in residual graph searched via BFS. $O(|V||E|^2)$.\\
 \lstinputlisting{Graphs/edmondskarps.java}
 \subsubsection{Ford-Fulkerson}
 Equals to Edmonds-Karps, vut with a DFS. $O(|E|f^*)$ where $f^*$ is the value of the max flow.
-\subsubsection{Shorter but slower implementation}
 \lstinputlisting{Graphs/maxflowslower.java}
 \subsubsection{Min cut}
 We search, between two nodes $s$ and $t$, $V_1$ and $V_2$ so as $s\in V_1$, $t\in V_2$ and $\sum_{e \in E(V_1, V_2)} w(e)$ minimum.\\
