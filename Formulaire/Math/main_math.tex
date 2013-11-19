@@ -118,7 +118,7 @@ $\cat(n) = \frac{C_n^{2n}}{n+1}$ $\cat(n+1) = \frac{(2n+2)(2n+1)}{(n+2)(n+1)}\ca
   \item triangulate a convex polygon of $n+2$ sides.
   \item number of monotonic paths along the edge of a $n\times n$ grid which do not pass above de diagonal.
 \end{itemize}
-\subsection{Fibonacci series {\footnotesize \textit{untested}}}
+\subsection{Fibonacci series}
 $f(0) = 0$, $f(1) = 1$ et $f(n) = f(n - 1) + f(n - 2)$.\\
 The following relation enables us to compute every number of the series in $O(log(n))$ :\\
 $$\begin{pmatrix}
@@ -128,23 +128,6 @@ $$\begin{pmatrix}
 f_{n+1} & f_n\\
 f_n & f_{n-1}
 \end{pmatrix}$$
-\begin{lstlisting}
-long fib(n) {
-  int i=1; int h=1; int j=0; int k=0; int t;
-  while(n > 0) {
-    if(n % 2 == 1) {
-      t = j * h;
-      j=i * h + j * k + t;
-      i=i * k + t;
-    }
-    t = h * h;
-    h = 2 * k * h + t;
-    k = k * k + t;
-  }
-  n = (int)n / 2;
-  return j;
-}
-\end{lstlisting}
 \subsection{Cycle finding}
 \begin{lstlisting}
 int[] floydCycleFinding (int x0) {

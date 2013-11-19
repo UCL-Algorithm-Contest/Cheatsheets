@@ -1,55 +1,44 @@
-int maxFlow(TreeMap<Integer, Integer>[] g, int s, int t) {
-  if(s == t) return 0;
-  int maxFlow = 0;
-  LinkedList<Edge> path = findAugmentingPath(g, s, t);
-  while(path != null) {
-    int pathCapacity = applyPath(g, path);
-    maxFlow += pathCapacity;
-    path = findAugmentingPath(g, s, t);
+int maxflowEK(TreeMap<Integer, Integer>[] g, int source, int sink) {
+  int flow = 0;
+  int pcap;
+  while((pcap = augmentBFS(g, source, sink)) != -1) {
+    flow += pcap;
   }
-  return maxFlow;
+  return flow;
 }
 
-LinkedList<Edge> findAugmentingPath(TreeMap<Integer,Integer>[] g, int s, int t) {
+	
+int augmentBFS(TreeMap<Integer, Integer>[] g, int source, int sink) {
+  // initialize bfs
   Queue<Integer> Q = new LinkedList<Integer>();
-  Q.add(s);
-  Edge[] parent = new Edge[g.length];
-  Arrays.fill(parent, null);
-  while(!Q.isEmpty()) {
-    int cur = Q.poll();
-    for(Entry<Integer, Integer> e : g[cur].entrySet()) {
-      int next = e.getKey();
-      int w = e.getValue();
-      if(parent[next] == null) {
-        Q.add(next);
-        parent[next] = new Edge(cur, next, w);
+  Integer[] p = new Integer[g.length];
+  int[] pcap = new int[g.length];
+  pcap[source] = Integer.MAX_VALUE;
+  p[source] = -1;
+  Q.add(source);
+  // compute path
+  while(p[sink] == null && !Q.isEmpty()) {
+    int u = Q.poll(); 
+    for(Entry<Integer, Integer> e : g[u].entrySet()) {
+      int v = e.getKey();
+      if(e.getValue() > 0 && p[v] == null) {
+        p[v] = u;
+        pcap[v] = Math.min(pcap[u], e.getValue());
+        Q.add(v);
       }
     }
   }
-  if(parent[t] == null) return null;
-  LinkedList<Edge> path = new LinkedList<Edge>();
-  int cur = t;
-  while(cur != s) {
-    path.add(parent[cur]);
-    cur = parent[cur].o;
+  if(p[sink] == null) return -1;
+  // update graph
+  int cur = sink;
+  while(cur != source) {
+    int prev = p[cur];
+    int cap = g[prev].get(cur);
+    g[prev].put(cur, cap - pcap[sink]);
+    Integer backcap = g[cur].get(prev);
+    g[cur].put(prev, backcap == null? pcap[sink] : backcap + pcap[sink]);
+    cur = prev;
   }
-  return path;
+  return pcap[sink];
 }
 
-int applyPath(TreeMap<Integer, Integer>[] g, LinkedList<Edge> path) {
-  int minCapacity = Integer.MAX_VALUE;
-  for(Edge e : path)
-    minCapacity = Math.min(minCapacity, e.w);
-  for(Edge e : path) {
-    if(minCapacity == e.w)
-      g[e.o].remove(e.d);
-    else
-      g[e.o].put(e.d, e.w - minCapacity);
-    Integer backCapacity = g[e.d].get(e.o);
-    if(backCapacity == null)
-      g[e.d].put(e.o, minCapacity);
-    else
-      g[e.d].put(e.o, backCapacity+minCapacity);
-  }
-  return minCapacity;
-}
