@@ -55,7 +55,7 @@ class Triple implements Comparable<Triple> {
 \end{lstlisting}
 \ \newline
 \begin{lstlisting}
-int[][] suffixOrder(String s) {
+int[][] suffixOrder(String s) { // O(n log^2(n))
   int n = s.length();
   int lg = (int)Math.ceil((Math.log(n) / Math.log(2))) + 1;
   int[][] so = new int[lg][n];
@@ -99,10 +99,11 @@ int[] suffixArray(int[][] so) {
 }
 
 //Retourne le plus long prefixe commun de suf_j (le suffixe de s commencant a j = s.substr(j)) et suf_k pour un so donne:
-int lcp(int[][] so, int j, int k) {
+int lcp(int[][] so, int j, int k) { // O(log(n)
   int lcp = 0;
+  int n = so[0].length;
   for(int i = so.length - 1; i >= 0; i--) {
-    if(so[i][j] == so[i][k]) {
+    if(j < n && k < n && so[i][j] == so[i][k]) {
       lcp += (1 << i);
       j += (1 << i);
       k += (1 << i);
