@@ -83,7 +83,7 @@ static int[] stringMatching(char[] s, char[] p) {  // string matching in O(m log
 	return ans;
 } // return lower/upper bound as the first/second item of the pair, respectively
 
-static String LRS(char[] s) { // Longest Repeating Subsequence
+static String LRS(char[] s) { // Longest Repeating substring
 	int n = s.length;
 	constructSA(s);
 	computeLCP(s);
@@ -99,7 +99,7 @@ static String LRS(char[] s) { // Longest Repeating Subsequence
 
 static int owner(int idx,int n,int m) { return (idx < n-m-1) ? 1 : 2; }
 
-static String LCS(String T, String P) { // Longest common subsequence
+static String LCS(String T, String P) { // Longest common substring
 	int i, idx = 0;
 
 	int m = P.length();
