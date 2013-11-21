@@ -9,5 +9,10 @@ Equals to Edmonds-Karps, vut with a DFS. $O(|E|f^*)$ where $f^*$ is the value of
 We search, between two nodes $s$ and $t$, $V_1$ and $V_2$ so as $s\in V_1$, $t\in V_2$ and $\sum_{e \in E(V_1, V_2)} w(e)$ minimum.\\
 We just have to compute the max-flow between $s$ and $t$ and to apply a BFS/DFS on the residual graph. All node which are visited are in $V_1$, others in $V_2$. The weight from the cut is the max-flow.
 \subsubsection{Maximum weighted bipartite matching}
-(Assignment problem)
+Assignment problem: Given a set of $n$ persons and $n$ jobs, an a cost matrix $M$ assign a job to each person to that the sum of the costs is minimized. It also works for $n$ persons and $m$ jobs with $n \neq m$. Just fill make a square matrix using dummy values. \\
+
+$O(n^3)$ solution:
 \lstinputlisting{Graphs/mwbm.java}
+\vspace{0.5cm}
+$O(n 2^n)$ solution using DP (very simple to code):
+\lstinputlisting{Graphs/mwbmDP.java}
