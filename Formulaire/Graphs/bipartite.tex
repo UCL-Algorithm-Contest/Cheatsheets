@@ -1,0 +1,29 @@
+\subsection{Bipartite graph}
+Check if bipartite
+\lstinputlisting{Graphs/isBipartite.java}
+\subsubsection{Max Cardinality Bipartite Matching (MCBM)}
+Pairing of adjacent nodes. No node in two different pairs.
+\begin{itemize}
+  \item Max Flow.
+  \item Augmenting Path: path starting at non matched, ending
+    at non-matched, even edges are matching.
+    MCBM ssi no augmenting path.
+    Start from non-matched, if augmenting path, augment
+    (do not have to take all matching in the augmenting path).
+\end{itemize}
+MCBM : Number of matching.
+\subsubsection{Independent Set (or Dominating Set)}
+Set of vertices with no edges between them.
+MIS, add a vertex create an edge.
+In \textbf{bipartite} graph,
+$\text{MIS} + \text{MCBM} = V$.
+
+\subsubsection{Vertex Cover}
+Vertices such that each edge is adjacent to at least one vertex.
+Min Vertex Cover (MVC). In \textbf{bipartite} graph,
+$\text{MVC} = \text{MCBM}$.
+
+In \textbf{general} graph,
+$\text{MVC} = \text{MIS}$ and the MVC is the complementary of MIS.
+
+\lstinputlisting{Graphs/mcbm.java}
