@@ -56,3 +56,7 @@ Min cost flow analogous to max flow but using Bellman-Ford to find paths (can be
 \lstinputlisting{Graphs/mincostflow.java}
 
 Some changes to SPFA may be necessary. Computation of global variable $p$ containing parents is requiered.
+
+\subsection{Chinese Postman Problem}
+
+Given an undirected weighted graph, compute the minimum length tour that visits every edge (edges may be visited several times, unavoidable if odd degree vertices exist). The number of odd degree vertices is even. Hence we can compute the minimum weight bipartite matching between them where $w_{ij}$ is the length of the shortest path between $i$ and $j$. Then the length of the tour is given by the sum of the lengths of all edges plus the weight of the matching.  

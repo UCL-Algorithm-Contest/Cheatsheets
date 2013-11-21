@@ -15,7 +15,7 @@ Given two String $x$ and $y$. Find the longest common sub-sequence between $x$ a
 \node[draw, circle] at (6, 0) (G)                  {\tiny C};
 \node[draw, circle, fill = blue!25] at (7, 0) (H)  {\tiny T};
 \node[draw, circle, fill = blue!25] at (8, 0) (I)  {\tiny A};
-\node[draw, circle] at (9, 0) (J)                  {\tiny A};
+\node[draw, circle, fill = blue!25] at (9, 0) (J)  {\tiny A};
 \node[draw, circle, fill = blue!25] at (10, 0) (K) {\tiny T};
 \node[draw, circle, fill = blue!25] at (11, 0) (L) {\tiny A};
 
@@ -25,9 +25,9 @@ Given two String $x$ and $y$. Find the longest common sub-sequence between $x$ a
 \node[draw, circle] at (3, 1) (d)                  {\tiny G};
 \node[draw, circle, fill = blue!25] at (4, 1) (e)  {\tiny G};
 \node[draw, circle, fill = blue!25] at (5, 1) (f)  {\tiny T};
-\node[draw, circle] at (6, 1) (g)                  {\tiny T};
-\node[draw, circle] at (7, 1) (h)                  {\tiny A};
-\node[draw, circle, fill = blue!25] at (8, 1) (i)  {\tiny T};
+\node[draw, circle, fill = blue!25] at (6, 1) (g)  {\tiny T};
+\node[draw, circle, fill = blue!25] at (7, 1) (h)  {\tiny A};
+\node[draw, circle] at (8, 1) (i)  {\tiny T};
 \node[draw, circle, fill = blue!25] at (9, 1) (j)  {\tiny A};
 \node[draw, circle, fill = blue!25] at (10, 1) (k) {\tiny T};
 \node[draw, circle, fill = blue!25] at (11, 1) (l) {\tiny A};
@@ -36,11 +36,12 @@ Given two String $x$ and $y$. Find the longest common sub-sequence between $x$ a
 \draw (C) edge (b);
 \draw (D) edge (c);
 \draw (F) edge (f);
-\draw (H) edge (i);
-\draw (I) edge (j);
+\draw (H) edge (g);
+\draw (I) edge (h);
 \draw (K) edge (k);
 \draw (L) edge (l);
 \draw (E) edge (e);
+\draw (J) edge (j);
 
 \end{tikzpicture}
 \end{center}
