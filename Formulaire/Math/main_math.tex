@@ -268,3 +268,43 @@ double[] gaussElim(double[][] A, double[] b) {
   return x;
 }
 \end{lstlisting}
+
+\subsection{Ternary Search}
+
+Find minimum of unimodal function. \\
+
+\begin{lstlisting}
+double ternarySearch(double left, double right) {
+  if(right - left < E) {
+    return (right + left) / 2;
+  }
+  double leftThird = (left * 2 + right) / 3;
+  double rightThird = (left + right * 2) / 3;
+  //minimize >, maximize <
+  if(f(leftThird) > f(rightThird)) { 
+    return ternarySearch(leftThird, right);
+  }			   
+  return ternarySearch(left, rightThird);
+}
+\end{lstlisting}
+
+\subsection{Integration}
+
+Compute integral. \\
+
+\begin{lstlisting}
+double integral(double a, double b) {
+  double h = b - a;
+  double c = (a + b) / 2.0;
+  double d = (a + c) / 2.0;
+  double e = (b + c) / 2.0;
+  double Q1 = h/6  * (f(a) + 4*f(c) + f(b));
+  double Q2 = h/12 * (f(a)+4*f(d)+2*f(c)+4*f(e)  
+                      +f(b));
+  if (Math.abs(Q2 - Q1) <= E) {
+    return Q2 + (Q2 - Q1) / 15;
+  } else {        	
+    return integral(a, c) + integral(c, b);
+  }
+}
+\end{lstlisting}
