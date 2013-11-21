@@ -1,5 +1,6 @@
 \subsection{Suffix array}
 \includegraphics[width=\linewidth]{suffixarray.jpg}
+\subsubsection{$O(n\log(n)^2)$, full matrix, need $n \leq 10K$}
 \begin{itemize}
 \item Suffix array of $algorithm$ = algorithm, gorithm, hm, ithm, lgorithm, m, orithm, rithm, thm
 
@@ -151,3 +152,6 @@ class MaxLexConc implements Comparator<String> {
     return -1; 
 }
 \end{lstlisting}
+
+\subsubsection{$O(n\log(n))$, only last line, need $n \leq 100K$}
+\lstinputlisting{DP/suffixArray.java}
