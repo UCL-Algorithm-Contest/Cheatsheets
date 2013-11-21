@@ -84,10 +84,8 @@ void subsets(int[] set) {
 \subsection{Decomposition in unit fractions {\footnotesize \textit{untested}}}
 Write $0<\frac{p}{q}<1$ as a sum of $\frac{1}{k}$
 \begin{lstlisting}
-void expandUnitFrac(long p, long q)
-{
-	if(p != 0)
-	{
+void expandUnitFrac(long p, long q) {
+	if(p != 0) {
 		long i = q % p == 0 ? q/p : q/p + 1;
 		System.out.println("1/" + i);
 		expandUnitFrac(p*i-q, q*i);
@@ -118,6 +116,26 @@ $\cat(n) = \frac{C_n^{2n}}{n+1}$ $\cat(n+1) = \frac{(2n+2)(2n+1)}{(n+2)(n+1)}\ca
   \item triangulate a convex polygon of $n+2$ sides.
   \item number of monotonic paths along the edge of a $n\times n$ grid which do not pass above de diagonal.
 \end{itemize}
+
+\vspace{0.5cm}
+
+Compute all Catalan number $\leq n$
+\begin{lstlisting}
+long[] allCatalan(int n) {
+  long[] catalanNumbers = new long[n];
+  catalanNumbers[0] = 1;
+  for(int i = 1; i < n; i++) {
+    int j = i - 1;
+    long b = j * j;
+    long a = 4 * b + 6 * j + 2;
+    b += 3 * j + 2;
+    catalanNumbers[i] = catalanNumbers[j] * a/b;
+  }
+  return catalanNumbers;
+}
+\end{lstlisting}
+
+
 \subsection{Fibonacci series}
 $f(0) = 0$, $f(1) = 1$ et $f(n) = f(n - 1) + f(n - 2)$.\\
 The following relation enables us to compute every number of the series in $O(log(n))$ :\\
@@ -206,5 +224,47 @@ static long[] chinese (long[] b, long[] m) {
     l = lcm;
   }
   return new long[] {x, l};
+}
+\end{lstlisting}
+
+\subsection{Linear equations}
+
+Solve $Ax = b$. \\
+
+\begin{lstlisting}
+double[] gaussElim(double[][] A, double[] b) {
+  int N  = b.length;
+  for(int p = 0; p < N; p++) {
+    int max = p;
+    for(int i = p + 1; i < N; i++) {
+      if(Math.abs(A[i][p])>Math.abs(A[max][p])) {
+        max = i;
+      } 
+    }
+    swap(A, p, max);
+    swap(b, p, max);
+    // singular or nearly singular
+    if(Math.abs(A[p][p]) <= E) {
+      return null;
+    }
+    // pivot within A and b
+    for(int i = p + 1; i < N; i++) {
+      double alpha = A[i][p] / A[p][p];
+      b[i] -= alpha * b[p];
+      for(int j = p; j < N; j++) {
+        A[i][j] -= alpha * A[p][j];
+      }
+    }
+  }
+  // back substitution
+  double[] x = new double[N];
+  for(int i = N - 1; i >= 0; i--) {
+    double sum = 0.0;
+    for(int j = i + 1; j < N; j++) {
+      sum += A[i][j] * x[j];
+    }
+    x[i] = (b[i] - sum) / A[i][i];
+  }
+  return x;
 }
 \end{lstlisting}
