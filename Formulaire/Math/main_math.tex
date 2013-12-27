@@ -164,6 +164,11 @@ int[] floydCycleFinding (int x0) {
 \end{lstlisting}
 \subsection{Number theory}
 \subsubsection{Misc}
+\[
+  ax \leq b \Leftrightarrow x \leq \left\lfloor \frac{b}{a} \right\rfloor \quad
+  ax \geq b \Leftrightarrow x \leq \left\lceil \frac{b}{a} \right\rceil \quad
+  \left\lceil \frac{a}{b} \right\rceil = \left\lfloor \frac{a+b-1}{b} \right\rfloor.
+\]
 \begin{lstlisting}
 long gcd (long a, long b) {
   return (b == 0) ? a : gcd(b, a % b);

@@ -4,13 +4,13 @@ static LinkedList<Integer>[] g;
 static int[] match;
 static BitSet visited;
 
-private static int Aug(int l) {
-  if (visited.get(l)) return 0;
-  visited.set(l);
+private static int Aug(int left) {
+  if (visited.get(left)) return 0;
+  visited.set(left);
 
-  for (int right : g[l]) {
+  for (int right : g[left]) {
     if (match[right] == -1 || Aug(match[right]) == 1) {
-      match[right] = l;
+      match[right] = left;
       return 1; // we found one matching
     }
   }
