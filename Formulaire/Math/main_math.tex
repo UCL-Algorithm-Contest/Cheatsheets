@@ -180,6 +180,19 @@ long modInverse (long a, long b) {
   return big(a).modInverse(big(b)).longValue();
 }
 \end{lstlisting}
+In prime factorization of $n$, the power of $p$ is
+\[\sum_{i=1}^{\infty} \left\lfloor \frac{n}{p^i} \right\rfloor\]
+\begin{lstlisting}
+int factopower (int n, int p) {
+  int pow = 0;
+  while (n > 0) {
+    pow += n / p;
+    n /= p;
+  }
+  return pow;
+}
+\end{lstlisting}
+
 \subsubsection{Euler phi}
 $\phi(N) = N \times \prod_{p | N} (1 - \frac{1}{p}) = \#\{k < N | \gcd(k,N) = 1\}$
 \begin{lstlisting}

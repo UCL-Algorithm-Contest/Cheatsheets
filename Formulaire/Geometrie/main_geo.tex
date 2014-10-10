@@ -1,5 +1,6 @@
 \section{Geometry}
 Be careful of rounding errors. Define $E$ in function of the problem.
+\lstinline|Double.parseDouble| est bien plus lent que \lstinline|Integer.parseInt|.
 \begin{lstlisting}
 boolean eq(double a,double b){return Math.abs(a - b) <= E;}
 boolean le(double a,double b){return a < b - E;}
@@ -169,6 +170,14 @@ class SegmentCmp implements Comparator<Segment> {
 \item $c = $ intersection of bisectors of $XY$ and $YZ$. 
 \end{itemize}
 \subsection{Polygon}
+\subsubsection{Triangles}
+\begin{itemize}
+  \item côtés $a,b,c$, angles $A,B,C$, hauteurs $h_A,h_B,h_C$, $s=\frac{a+b+c}{2}$, aire $S$.
+  \item Aire: $S=ah_A/2$, $S=ab\sin C/2$, $S=\sqrt{s(s-a)(s-b)(s-c)}$.
+  \item Inradius $r=\frac{S}{s}$.
+  \item Outradius $2R = \frac{a}{\sin A} = \frac{b}{\sin B} = \frac{c}{\sin C}$.
+  \item $rR = \frac{abc}{4s}$.
+\end{itemize}
 \subsubsection{Check convexity}
 \begin{lstlisting}
 boolean isConvex(Point[] P) {
