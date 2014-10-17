@@ -32,8 +32,9 @@ all: $(PDF_NAME)
 # Other depences are gessed automatically by latexmk
 # see http://tex.stackexchange.com/questions/40738/how-to-properly-make-a-latex-project
 $(PDF_NAME): $(MAIN_NAME).tex
-	latexmk -pdf -pdflatex="pdflatex -shell-escape -enable-write18" \
-	  -use-make $(MAIN_NAME).tex
+	xelatex $(MAIN_NAME).tex
+	#latexmk -pdf -xelatex="xelatex -shell-escape -enable-write18" \
+	  #-use-make $(MAIN_NAME).tex
 
 clean:
 	latexmk -CA

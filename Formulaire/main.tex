@@ -1,18 +1,20 @@
 \documentclass[2pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
+\usepackage{fontspec}
+%\usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
-\usepackage[T1]{fontenc}
+%\usepackage[T1]{fontenc}
+%\usepackage{lmodern}
+
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{epstopdf}
-\usepackage{lmodern}
 \usepackage{eurosym}
 \usepackage{textcomp}
 \usepackage{subfigure}
 \usepackage{placeins}
-\usepackage{listings}
+\usepackage{listingsutf8}
 \usepackage{proof}
 \usepackage{amsthm}
 \usepackage[left=1cm,right=1cm,top=2cm,bottom=1cm]{geometry}
@@ -40,7 +42,7 @@
 \fancyhead[RO]{\textbf{\thepage}}
 \fancyhead[LO]{Université Catholique de Louvain}
 %\fancyhead[RE]{\textsl{\leftmark}}
-\renewcommand{\headrulewidth}{1px}
+\renewcommand{\headrulewidth}{.1em}
 \DeclareMathOperator{\cat}{cat}
 
 \lstset{ %
@@ -72,7 +74,7 @@
   aboveskip=0pt,
 }
 \setlength{\parindent}{0cm}
-\setlength{\columnseprule}{1px}
+\setlength{\columnseprule}{.1em}
 \author{François Aubry, Guillaume Derval, Benoît Legat, Anthony Gégo}
 \title{Formulaire BAPC}
 \begin{document}
