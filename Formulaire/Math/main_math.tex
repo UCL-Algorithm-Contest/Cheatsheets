@@ -263,6 +263,16 @@ Discrete log
   a^x \equiv a^y \pmod{n} & \Leftrightarrow x \equiv y \pmod{O_n(a)}\\
                           & \Leftarrow x \equiv y \pmod{\phi(n)}\\
 \end{align*}
+and in particular, if $g$ is a primitive root of $p$,
+\begin{align*}
+  g^x \equiv g^y \pmod{p} & \Leftrightarrow x \equiv y \pmod{p-1}
+\end{align*}
+so for an equation ($p \not| a,b$)
+\[ a^{k_1} \equiv b^{k_2} \pmod{p} \]
+we take $\ell_1$ and $\ell_2$ such that $a = g^{\ell_1}$ and $b = g^{\ell_2}$
+and it becomes
+\[ k_1\ell_1 \equiv k_2\ell_2 \pmod{p-1} \]
+
 
 \subsubsection{Quadratic residue (QR)}
 $p$ \emph{odd} prime.
