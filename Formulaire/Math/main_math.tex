@@ -179,6 +179,10 @@ long lcm (long a, long b) {
 long modInverse (long a, long b) {
   return big(a).modInverse(big(b)).longValue();
 }
+long modInverse (long a, long b) {
+  extendedEuclid(a, b);
+  return x;
+}
 \end{lstlisting}
 In prime factorization of $n$, the power of $p$ is
 \[\sum_{i=1}^{\infty} \left\lfloor \frac{n}{p^i} \right\rfloor\]
@@ -193,27 +197,6 @@ int factopower (int n, int p) {
 }
 \end{lstlisting}
 
-\subsubsection{Euler phi}
-$\phi(N) = N \times \prod_{p | N} (1 - \frac{1}{p}) = \#\{k < N | \gcd(k,N) = 1\}$
-\begin{lstlisting}
-long phi(long n, int primes[]) {
-  long ans = n; // Method 1
-  for (int i = 0; i < primes.length && primes[i] * primes[i] <= n; i++) {
-    int p = primes[i];
-    if (n % p == 0) ans -= ans / p;
-    while (n % p == 0) ans /= p;
-  }
-  if (n != 1) ans -= ans / n;
-  return ans;
-}
-\end{lstlisting}
-\begin{lstlisting}
-for (int i = 1; i <= 1000000; i++) phi[i] = i;
-for (int i = 2; i <= 1000000; i++) // Method 2
-  if (phi[i] == i) // i is prime
-    for (int j = i; j <= 1000000; j += i)
-      phi[j] = (phi[j] / i) * (i - 1);
-\end{lstlisting}
 \subsubsection{Équations diophantiennes}
 $ax + by = c$. $d = \gcd(a,b)$, no sol si $d$ divise pas $c$ sinon $(a,b) = (x (n/d) + (b/d)n, y (n/d) + (a/d)n)$ où $ax + by = d$ $n \in \mathbb{Z}$.
 \begin{lstlisting}
@@ -244,6 +227,70 @@ static long[] chinese (long[] b, long[] m) {
   return new long[] {x, l};
 }
 \end{lstlisting}
+
+\subsubsection{Euler phi}
+$\phi(N) = N \times \prod_{p | N} (1 - \frac{1}{p}) = \#\{k < N | \gcd(k,N) = 1\}$
+\begin{lstlisting}
+long phi(long n, int primes[]) {
+  long ans = n; // Method 1
+  for (int i = 0; i < primes.length && primes[i] * primes[i] <= n; i++) {
+    int p = primes[i];
+    if (n % p == 0) ans -= ans / p;
+    while (n % p == 0) ans /= p;
+  }
+  if (n != 1) ans -= ans / n;
+  return ans;
+}
+\end{lstlisting}
+\begin{lstlisting}
+for (int i = 1; i <= 1000000; i++) phi[i] = i;
+for (int i = 2; i <= 1000000; i++) // Method 2
+  if (phi[i] == i) // i is prime
+    for (int j = i; j <= 1000000; j += i)
+      phi[j] = (phi[j] / i) * (i - 1);
+\end{lstlisting}
+
+\begin{itemize}
+  \item If $\phi(1) = 1$, $n = \sum_{d|n} \phi(d)$.
+  \item $p$ prime iff there exists a number relatively prime with $p$ of order $p-1$ (primitive root of $p$).
+  \item There is $\phi(d)$ number of orders $d$ modulo $p$.
+  \item If $g$ is order $d$ mod $p$, $\{g^k | k=1,\ldots,d-1 : (k,d) = 1\}$ are the
+    $\phi(d)$ numbers of order $d$ mod $p$.
+\end{itemize}
+
+Discrete log
+\begin{align*}
+  a^x \equiv a^y \pmod{n} & \Leftrightarrow x \equiv y \pmod{O_n(a)}\\
+                          & \Leftarrow x \equiv y \pmod{\phi(n)}\\
+\end{align*}
+
+\subsubsection{Quadratic residue (QR)}
+$p$ \emph{odd} prime.
+Let $g$ primitive root mod $p$.
+$\forall n$, $g^{2n}$ is QR mod $p$ and $g^{2n+1}$ is not.
+There is $\frac{p-1}{2}$ QR and $\frac{p-1}{2}$ not QR.
+\begin{align*}
+  \left(\frac{a}{p}\right) & \equiv a^{\frac{p-1}{2}} \pmod{m}\\
+                           & = \prod_{r=1}^{\frac{p-1}{2}} \varepsilon(ar)
+\end{align*}
+where $\varepsilon(x) = 1$ if $x \equiv 1, \ldots, \frac{p-1}{2} \pmod{p}$ and $-1$ otherwise.
+
+$b$ odd ($\left(\frac{a}{b}\right)=1$ does not mean $a$ QR mod $b$ !!!)
+\[ \left(\frac{a}{b}\right) \triangleq \prod \left(\frac{a}{p_i}\right)^{e_i} \]
+\begin{itemize}
+  \item $\left(\frac{-1}{b}\right) = 1$ iff $b \equiv 1 \pmod{4}$.
+  \item $\left(\frac{2}{b}\right) = 1$ iff $b \equiv \pm 1 \pmod{8}$.
+\end{itemize}
+
+$b$ odd
+\[ \left(\frac{ac}{b}\right) = \left(\frac{a}{b}\right)\left(\frac{c}{b}\right) \]
+
+$a,b$ odd
+\begin{align*}
+  \left(\frac{a}{b}\right)\left(\frac{b}{a}\right) & = (-1)^{\frac{a-1}{2}\frac{b-1}{2}}.
+\end{align*}
+
+\lstinputlisting{Math/QR.java}
 
 \subsection{Linear equations}
 
