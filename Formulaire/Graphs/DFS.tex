@@ -10,13 +10,19 @@ Uses BFS following the topologic order. \\
 
 \lstinputlisting{Graphs/scc.java}
 \subsubsection{SCC and Articulation Points in C}
-C version of SCC (shorter). \\
+C version of SCC (shorter).
 
 \lstinputlisting{Graphs/scc1.cpp}
 
-Articulation points. \\
+Articulation points.
 
 \lstinputlisting{Graphs/scc2.cpp}
 
+\subsubsection{Directed Graph to toposorted DAG}
+In $O(n + m)$, with Tarjan SCC algo,
+we merge the SCCs and take the resulting DAG,
+(remembering their size in \lstinline|scc_size|)
+which is reverse toposorted (i.e. node 0 has no outgoing edge),
+ready for bottom up DP (starting with node 0 ending with node $N$) !
 
-
+\lstinputlisting{Graphs/sccdag.java}
