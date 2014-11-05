@@ -10,10 +10,10 @@
 \subsection{Operations on bits}
 \begin{enumerate}
 	\item Check parity of $n$: \lstinline{(n & 1) == 0}
-	\item $2^n$: \lstinline|1 << n|.
-	\item Test of the $i$th bit of $n$ is $0$: \lstinline{(n & 1 << i) != 0}
-	\item Set the $i$th bit of $n$ at 0: \lstinline{n &= ~(1 << i)}
-	\item Set the $i$th bit of $n$ at 1: \lstinline{n |= (1 << i)}
+	\item $2^n$: \lstinline|1L << n|.
+	\item Test of the $i$th bit of $n$ is $0$: \lstinline{(n & 1L << i) != 0}
+	\item Set the $i$th bit of $n$ at 0: \lstinline{n &= ~(1L << i)}
+	\item Set the $i$th bit of $n$ at 1: \lstinline{n |= (1L << i)}
 	\item Union: \lstinline{a | b}
 	\item Intersection: \lstinline{a & b}
 	\item Subtraction bits: \lstinline{a & ~b}
