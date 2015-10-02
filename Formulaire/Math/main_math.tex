@@ -257,6 +257,8 @@ for (int i = 2; i <= 1000000; i++) // Method 2
   \item If $g$ is order $d$ mod $p$, $\{g^k | k=1,\ldots,d-1 : (k,d) = 1\}$ are the
     $\phi(d)$ numbers of order $d$ mod $p$.
 \end{itemize}
+Let $\phi_S(n) = \sum_{i=1}^n \phi(i)$.
+\[ \phi_S(n) = \frac{n^2+n}{2} - \sum_{d=2}^n \phi_S\Big(\Big\lfloor\frac{n}{d}\Big\rfloor\Big). \]
 
 Discrete log
 \begin{align*}
