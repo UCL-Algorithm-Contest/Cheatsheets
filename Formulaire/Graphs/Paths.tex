@@ -1,9 +1,9 @@
 \subsection{Dijkstra}
-Shortest path from a node $v$ to other nodes. Graph must not have any negative weighted cycle.\\
+Shortest path from a node $v$ to other nodes. Graph must not have any negative weighted cycle. $O((|V|+|E|) \log(|V|))$\\
 
 \lstinputlisting{Graphs/dijkstra.java}
 \subsection{Bellman-Ford\label{BellmanFord}}
-Shortest path from a node $v$ to other nodes. Graph can have negative weighted cycles: Bellman-Ford won't give the correct shortest path, but will warn that a negative cycle exists. 
+Shortest path from a node $v$ to other nodes. Graph can have negative weighted cycles: Bellman-Ford won't give the correct shortest path, but will warn that a negative cycle exists. $O(|V||E|)$.
 \lstinputlisting{Graphs/bellmanford.java}
 \subsection{Floyd-Warshall}
 Shortest path from a node $v$ to other nodes. Graph can have negative weighted cycles: Floyd-Warshall won't give the correct shortest path, but will warn that a negative cycle exists. Negative weighted cycles exists iif $result[v][v]<0$. $O(|V|^3)$ in time and $O(|V|^2)$ in memory.\\
