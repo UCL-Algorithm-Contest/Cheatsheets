@@ -1,6 +1,6 @@
-\section{Geometry}
+\section{Geometry in 2D}
 Be careful of rounding errors. Define $E$ in function of the problem.
-\lstinline|Double.parseDouble| est bien plus lent que \lstinline|Integer.parseInt|.
+\lstinline|Double.parseDouble| is a lot slower than \lstinline|Integer.parseInt|.
 \begin{lstlisting}
 boolean eq(double a,double b){return Math.abs(a - b) <= E;}
 boolean le(double a,double b){return a < b - E;}
@@ -195,6 +195,7 @@ boolean isConvex(Point[] P) {
 }
 \end{lstlisting}
 \subsubsection{Winding number}
+Number of times a path of points "turn around" another point. (can check if a point is inside a polygon: in this case, winding numbe $!=0$)
 \begin{lstlisting}
 // assumes p is not on P
 double winding(Point[] P, Point p) {
@@ -282,3 +283,54 @@ Point[] buildChain(Point[] points, int sgn) {
 %\lstinputlisting{Geometrie/Geometry.h}
 %}
 %\lstset{language=Java}
+
+\section{Geometry in 3D}
+\subsection{Cross product}
+With vectors $\vec{V_1}=(a_1, b_1, c_1)$ and $\vec{V_2}=(a_2, b_2, c_2)$:
+$$\vec{V_1}\times\vec{V_2}=(b_1c_2-c_1b_2, c_1a_2-a_1c_2, a_1b_2-b_1a_2)$$
+\subsection{Equation of a plane}
+\subsubsection{with a normal vector and a point}
+A plane is defined by a point $(x_0, y_0, z_0)$ and an normal vector $(a, b, c)$.
+$$a(x-x_0)+b(y-y_0)+c(z-z_0)=0$$
+$$ax+by+cz=ax_0+by_0+cz_0=d$$
+\subsubsection{with a point and two vectors in the plane}
+A plane is defined by a point $(x_0, y_0, z_0)$ and two vectors $(\alpha_1, \beta_1, \gamma_1)$ and $(\alpha_2, \beta_2, \gamma_2)$. We obtain the parametric equations:
+$$x=x_0+t_1\alpha_1+t_2\alpha_2$$
+$$y=y_0+t_1\beta_1+t_2\beta_2$$
+$$z=z_0+t_1\gamma_1+t_2\gamma_2$$
+Or we can find the normal vector of the plane by doing the vector product of the two vectors
+\subsubsection{with three points}
+Make vectors from these three points and use one of the methods above.
+\subsection{Equation of a line}
+\subsubsection{With a point and a vector}
+A line is defined by a point $(x_0, y_0, z_0)$ and a vector $(a, b, c)$.
+$$x=x_0+ta$$
+$$y=y_0+tb$$
+$$z=z_0+tc$$
+\subsubsection{With two points}
+$$x=x_1+t(x_2-x_1)$$
+$$y=y_1+t(y_2-y_1)$$
+$$z=z_1+t(z_2-z_1)$$
+\subsection{Distance from a point to a line}
+Distance from a point $M_P=(x_p, y_p, z_p)$ to a line defined with a point $M_L=(x_l, y_l, z_l)$ and a vector $\vec{V}=(a, b, c)$ equals to
+$$\frac{||\vec{M_LM_P}\times\vec{V}||}{||\vec{V}||}$$
+\subsection{Distance from a point to a plane}
+The distance to a plane is 0 if a point is in the plane.
+$$\frac{|ax_p+by_p+cz_p-d|}{\sqrt{a^2+b^2+c^2}}$$
+\subsection{Orthogonal projection of a point on a line}
+If $p_p$ is the point, $s$ the direction vector of the line and $p_l$ the base point for the vector, the projection is
+$$\frac{(p_p-p_l)\cdot s}{s\cdot s}s+p_l$$
+\subsection{Orthogonal projection of a point on a plane}
+$$P_p=(x+\lambda a, y+\lambda b, z + \lambda c)$$
+$$\lambda = -\frac{ax_p+by_p+cz_p-d}{a^2+b^2+c^2}$$
+\subsection{Orthogonal projection of a line on a plane}
+Take two points of the line, project them on the plane, recreate the line from the two new points.
+\subsection{Finding if a point is in a 3D polygon}
+Take any ray in the plane of the polygon, starting from the point you want to check (simply fix one of the coordinate of the point to find the ray); if it intersects an even number number of time with the sides of the polygon, the point is inside it.
+\subsection{Intersection of a line and a plane}
+Given a plane $ax+by+cz=d$ and a line with parametric equations:
+$$x=x_0+\alpha t$$
+$$y=y_0+\beta t$$
+$$z=z_0+\gamma t$$
+The value of $t$ associated with the intersection is
+$$t=\frac{d-ax_0-by_0-cz_0}{a\alpha+b\beta+c\gamma}$$
