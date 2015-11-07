@@ -244,7 +244,7 @@ Point[] convexHull(Point[] points) {
     hull[i] = upChain[i];
   }
   for(int j = loChain.length - 2; j >= 1; j--) {
-    hull[i] = loChain[j];
+    hull[i] = loChain[j]; i++;
   }
   return hull;
 }
