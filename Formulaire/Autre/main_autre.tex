@@ -6,6 +6,16 @@
 \begin{lstlisting}
 int reponse() { return 42; }
 \end{lstlisting}
+\subsection{FFT}
+Efficiently compute the coefficients of the polynomial
+\[ (\sum_{i=0}^n a_ix^i) (\sum_{i=0}^n b_ix^i) \]
+That is, compute the convolution
+\[ c_k = a * b = \sum_{i=0}^k a_i b_{k-i}. \]
+We have $\mathsf{FFT}(a*b) = \mathsf{FFT}(a) \cdot \mathsf{FFT}(b)$ where $\cdot$ is the
+entrywise product and FFT is $n \log(n)$!
+
+\lstinputlisting{Autre/fft.java}
+
 \subsection{Sort algorithms {\footnotesize \textit{untested}}}
 \begin{lstlisting}
 int findKth(int[] A, int k, int n) {
