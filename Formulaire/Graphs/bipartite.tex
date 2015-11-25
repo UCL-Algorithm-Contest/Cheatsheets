@@ -12,6 +12,13 @@ Pairing of adjacent nodes. No node in two different pairs.
     (do not have to take all matching in the augmenting path).
 \end{itemize}
 MCBM : Number of matching.
+
+Hungarian algorithm $O(|V||E|)$:
+\lstinputlisting{Graphs/hungarian.java}
+
+Hopcroft-Karp algorithm $O(\sqrt{|V|}|E|)$:
+\lstinputlisting{Graphs/hopcroftkarp.java}
+
 \subsubsection{Independent Set (or Dominating Set)}
 Set of vertices with no edges between them.
 MIS, add a vertex create an edge.
@@ -24,6 +31,4 @@ Min Vertex Cover (MVC). In \textbf{bipartite} graph,
 $\text{MVC} = \text{MCBM}$.
 
 In \textbf{general} graph,
-$\text{MVC} = \text{MIS}$ and the MVC is the complementary of MIS.
-
-\lstinputlisting{Graphs/mcbm.java}
+$\text{MIS} + \text{MVC} = |V|$ and the MVC is the complementary of MIS.

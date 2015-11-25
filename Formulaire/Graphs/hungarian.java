@@ -18,7 +18,7 @@ private static int Aug(int left) {
   return 0; // no matching
 }
 
-static int mcbm () {
+static int hungarian () {
   int MCBM = 0;
   match = new int[n];
   for (int i = 0; i < n; i++) {
