@@ -170,6 +170,33 @@ class SegmentCmp implements Comparator<Segment> {
 \item $c = $ intersection of bisectors of $XY$ and $YZ$. 
 \end{itemize}
 \subsection{Polygon}
+\subsection{Triangulation}
+A vertex $i$ of a polygon is a ear if the triangle formed by vertices
+$i - 1$, $i$ and $i + 1$ is inside the polygon. Every polygon has at
+least two ears. Therefore to triangulate we can remove the ears 
+until only a triangle remains. Any triangulation has always exactly 
+$n - 2$ triangles. Implemented naivelly this gives a $O(n^3)$ algorithm.
+Can be done in sweep line in $O(n \log(n))$ but is it harder.
+\begin{lstlisting}
+// assumes that pol is in counter-clockwise order
+private static boolean ear(Point[] pol, int i) {
+  int n = pol.length;
+  int j = (i - 1 + n) % n;
+  int k = (i + 1 + n) % n;
+  // if ccw then points must also be ccw
+  if(orient(pol[j], pol[i], pol[k]) < eps) return false;
+  for(int m = 0; m < n; m++)
+    // inTriangle not in the sheets. checks if pol[m] is inside triangle pol[j]pol[i]pol[k]
+    if(m != i && m != j && m !=k && inTriangle(pol[m], pol[j], pol[i], pol[k]))
+      return false;
+  return true;
+}
+\end{lstlisting}
+
+\subsection{Circle-Line intersection}
+
+\includegraphics[scale=0.5]{Geometrie/circleLine.png}
+
 \subsubsection{Triangles}
 \begin{itemize}
   \item côtés $a,b,c$, angles $A,B,C$, hauteurs $h_A,h_B,h_C$, $s=\frac{a+b+c}{2}$, aire $S$.
