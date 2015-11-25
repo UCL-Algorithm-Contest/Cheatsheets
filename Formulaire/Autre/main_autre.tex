@@ -10,9 +10,11 @@ int reponse() { return 42; }
 Efficiently compute the coefficients of the polynomial
 \[ (\sum_{i=0}^n a_ix^i) (\sum_{i=0}^n b_ix^i) \]
 That is, compute the convolution
-\[ c_k = a * b = \sum_{i=0}^k a_i b_{k-i}. \]
-We have $\mathsf{FFT}(a*b) = \mathsf{FFT}(a) \cdot \mathsf{FFT}(b)$ where $\cdot$ is the
-entrywise product and FFT is $n \log(n)$!
+\[ c_k = a \otimes b = \sum_{i=0}^k a_i b_{k-i}. \]
+For any two vectors $a$ and $b$ of length $n$ that is a power of two,
+\[ a \otimes b = \mathsf{DFT}^{-1}_{2n}(\mathsf{DFT}_{2n}(a) \cdot \mathsf{DFT}_{2n}(b)). \]
+where $a$ and $b$ are padded with 0s to length $2n$, $\cdot$ denotes
+the componentwise product and DFT is $n \log(n)$!
 
 \lstinputlisting{Autre/fft.java}
 
