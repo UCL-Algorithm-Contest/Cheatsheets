@@ -120,6 +120,34 @@ $$
 \sum_{v \in V} \max \left( \textit{out-degree}(v) - \textit{in-degree}(v), 0 \right)
 $$
 
+\subsection{Max-Flow with demands}
+
+\subsubsection{Node demande}
+
+Intead of conservation constraints we have for all $v \in V$:
+$$
+\textit{flow-in}(v) - \textit{flow-out}(v) = d_v 
+$$
+Add a node $s^*$ connected to each node $v$ with $d_v < 0$ with an
+edge of capacity $-d_v$. Add a node $t^*$ and connect each node with
+$d_v > 0$ to it with and edge of capacity $d_v$. Solution exists iff
+$$
+\textit{max-flow}(s^*, t^*) = \textit{in-capacity}(t^*)
+$$
+
+\subsubsection{Edge lower bounds}
+
+Add lower bound $l_e$ to each edge. Constraint becomes
+$$
+l_e \leq f(e) \leq c_e
+$$
+To change into max-flow: (1) define
+$$
+L_v = \sum_{e \textit{ into } v} l_e - \sum_{e \textit{ out of } v} l_e;
+$$
+(2) set demands $d'_v = d_v - L_v$ where $d_v$ are the input demands (usually $0$);
+(3) set $c'_e = c_e - l_e$; (4) solve max flow with node demands $d'_v$ and 
+capacities $c'_e$.
 
 
 \subsection{Chinese Postman Problem}
