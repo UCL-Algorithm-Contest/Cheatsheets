@@ -169,8 +169,20 @@ class SegmentCmp implements Comparator<Segment> {
 \item $3$ non collinear points define a unique circle.
 \item $c = $ intersection of bisectors of $XY$ and $YZ$. 
 \end{itemize}
-\subsection{Polygon}
-\subsection{Triangulation}
+
+\subsubsection{Circle-line intersection}
+\includegraphics[scale=0.5]{Geometrie/circleLine.png}
+
+\subsubsection{Circle-circle or circle-point tangents}
+\newcommand{\acos}{\mbox{acos}}
+Find lines tangent to both circles $(C_1,r_1)$ and $(C_2,r_2)$. Let $d = |C_1C_2|$.
+\begin{itemize}
+\item{\bf Inner tangents:} Condition: $r_1+r_2 \leq d$ (if equal, only one). Let $\alpha = \acos(\frac{r_1+r_2}{d})$, then the tangency two points $T$ on either circle are such that $\widehat{C_2C_1T}=\alpha$ and $\widehat{C_1C_2T}=\alpha$ respectively.
+\item{\bf Outer tangents:} Condition: $|r_1-r_2| \leq d$ (if equal, only one). Same, but with $\widehat{C_2C_1T}=\acos(\frac{r_1-r_2}{d})$ and $\widehat{C_1C_2T}=\acos(\frac{r_2-r_1}{d})$.
+\end{itemize}
+For circle-point tangents, set $r_2=0$ on inner tangents.
+\subsection{Polygons}
+\subsubsection{Triangulation}
 A vertex $i$ of a polygon is a ear if the triangle formed by vertices
 $i - 1$, $i$ and $i + 1$ is inside the polygon. Every polygon has at
 least two ears. Therefore to triangulate we can remove the ears 
@@ -192,10 +204,6 @@ private static boolean ear(Point[] pol, int i) {
   return true;
 }
 \end{lstlisting}
-
-\subsection{Circle-Line intersection}
-
-\includegraphics[scale=0.5]{Geometrie/circleLine.png}
 
 \subsubsection{Triangles}
 \begin{itemize}
