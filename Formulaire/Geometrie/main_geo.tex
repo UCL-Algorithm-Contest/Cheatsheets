@@ -6,6 +6,65 @@ boolean eq(double a,double b){return Math.abs(a - b) <= E;}
 boolean le(double a,double b){return a < b - E;}
 boolean leq(double a,double b){return a <= b + E;}
 \end{lstlisting}
+\subsection{Areas}
+Let $D$ be a simple closed curve and $C$ its boundary. For any
+function $F(x, y) = (F_1(x, y), F_2(x, y))$ such that $\partial F_2 \slash \partial x - \partial F_1 \slash \partial y =  1$
+we have $\textit{area}(D) = \int_C F(s) ds$. Recall that $\int_C F(s) ds = \int_a^b F(r(t)) \cdot r'(t) dt$ where $r : [a, b] \rightarrow C$
+is a parametrization of $C$. Usual parametrization of a line segment $(x_1, y_1)$ to $(x_2, y_2)$: $r(t) = (x_1 + t(x_2 - x_1), y_1 + t(y_2 - y_1)), t \in [0, 1]$. Usual parametrization
+of a circle arc $\theta_1$ to $\theta_2$: $r(t) = (R \cos(t), R \sin(t)), t \in [\theta_1, \theta_2]$.
+
+\textbf{Example:} Choose for instance $F(x, y) = (0, x)$ we have $\partial F_2 \slash \partial x - \partial F_1 \slash \partial y = 
+\partial x \slash \partial x - \partial 0 \slash \partial y = 1 - 0 = 1$. For the segment we have:
+$$
+F(r(t)) = (x_1 + t(x_2 - x_1), y_1 + t(y_2 - y_1)) = (0, x_1 + t(x_2 - x_1))
+$$
+$$
+r'(t) = (x_2 - x_1, y_2 - y_1)
+$$
+The contribution of a line segment is:
+\footnotesize
+\begin{align*}
+\int_0^1 F(r(t)) r'(t) dt & = \int_0^1 (0, x_1 + t(x_2 - x_1)) \cdot (x_2 - x_1, y_2 - y_1) \\
+& = \int_0^1 t (x_2 - x_1) (y_2 - y_1) = \frac{(x_2 - x_1) (y_2 - y_1)}{2}
+\end{align*}
+\normalsize
+For the circle arc we have:
+$$
+F(r(t)) = (R \cos(t), R \sin(t)) = (0, R \cos(t))
+$$
+$$
+r'(t) = (-R \sin(t), R \cos(t))
+$$
+The contribution of a circle arc is:
+\footnotesize
+\begin{align*}
+\int_{\theta_1}^{\theta_2} F(r(t)) r'(t) dt & = \int_{\theta_1}^{\theta_2} (0, R \cos(t)) \cdot (-R \sin(t), R \cos(t)) \\
+& = \int_{\theta_1}^{\theta_2} R^2 \cos^2(t) = \frac{R^2}{2} \left( t + sin(t) cos(t) \right) \Big|_{\theta_1}^{\theta_2}  \\
+& = \frac{R^2}{2} \left( \theta_2 + sin(\theta_2) cos(\theta_2) - \theta1 - sin(\theta_1) cos(\theta_1) \right)
+\end{align*}
+\begin{center}
+\begin{tikzpicture}[scale = 0.4]
+\draw (0, 3) -- (3, 0) -- (-3, -6) -- (0, 3);
+\draw (0, 0) circle (3);
+
+\draw[->, cyan, thick] (3, 0) -- (0, 3);
+\draw[->, red, thick] (0, 3) -- (-1.8, -2.4);
+\draw[->, orange, thick] (0, -3) -- (3, 0);
+\draw[->, blue,thick,domain=233:270] plot ({3 * cos(\x)}, {3 * sin(\x)});
+
+\node[anchor = south] at (0, 3) {\tiny $B = (0, 3)$};
+\node[anchor = west] at (3, 0) {\tiny $A = (3, 0)$};
+\node[anchor = north east] at (-2, -2) {\tiny $C = (-1.8, -2.4)$};
+\node[anchor = north west] at (0, -3) {\tiny $D = (0, -3)$};
+\fill (0, 3) circle (0.1);
+\fill (0, -3) circle (0.1);
+\fill (3, 0) circle (0.1);
+\fill (-1.8, -2.4) circle (0.1);
+
+\node at (0, 5) {intersection area = {\color{cyan}4.5} +  {\color{red}4.86} +  {\color{blue}0.74} +  {\color{orange}4.5}}
+\end{tikzpicture}
+\end{center}
+
 \subsection{Vectors}
 \subsubsection{Rotation around (0,0)}
 $(x, y) \leftrightarrow x + y i$\\
@@ -166,12 +225,15 @@ class SegmentCmp implements Comparator<Segment> {
 \subsection{Circles}
 \subsubsection{Circles from 3 points}
 \begin{itemize}
+\setlength\itemsep{-1em}
 \item $3$ non collinear points define a unique circle.
 \item $c = $ intersection of bisectors of $XY$ and $YZ$. 
 \end{itemize}
-
 \subsubsection{Circle-line intersection}
-\includegraphics[scale=0.5]{Geometrie/circleLine.png}
+
+\begin{center}
+\includegraphics[scale=0.45]{Geometrie/circleLine.png}
+\end{center}
 
 \subsubsection{Circle-circle or circle-point tangents}
 \newcommand{\acos}{\mbox{acos}}
@@ -188,7 +250,8 @@ $i - 1$, $i$ and $i + 1$ is inside the polygon. Every polygon has at
 least two ears. Therefore to triangulate we can remove the ears 
 until only a triangle remains. Any triangulation has always exactly 
 $n - 2$ triangles. Implemented naivelly this gives a $O(n^3)$ algorithm.
-Can be done in sweep line in $O(n \log(n))$ but is it harder.
+Can be implemented in $O(n^2)$. Faster algorithms exists: 
+sweep line does it in $O(n \log(n))$ but is it harder.
 \begin{lstlisting}
 // assumes that pol is in counter-clockwise order
 private static boolean ear(Point[] pol, int i) {
@@ -304,7 +367,9 @@ Point[] buildChain(Point[] points, int sgn) {
 
 \subsection{Interval Tree}
 
-\includegraphics[scale=0.38]{Geometrie/it.png}
+\begin{center}
+\includegraphics[scale=0.35]{Geometrie/it.png}
+\end{center}
 
 \lstinputlisting{Geometrie/intervaltree.java}
 
