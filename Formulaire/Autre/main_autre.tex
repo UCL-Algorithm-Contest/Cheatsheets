@@ -1,11 +1,11 @@
 \section{Miscellaneous}
-\begin{center}
-	\includegraphics[width=0.7\linewidth]{whyuno.jpg}
-\end{center}
-\subsection{The answer}
-\begin{lstlisting}
-int reponse() { return 42; }
-\end{lstlisting}
+%\begin{center}
+%	\includegraphics[width=0.7\linewidth]{whyuno.jpg}
+%\end{center}
+%\subsection{The answer}
+%\begin{lstlisting}
+%int reponse() { return 42; }
+%\end{lstlisting}
 \subsection{FFT}
 Efficiently compute the coefficients of the polynomial
 \[ (\sum_{i=0}^n a_ix^i) (\sum_{i=0}^n b_ix^i) \]
@@ -187,71 +187,71 @@ void shuffle(Object[] a)
   }
 }
 \end{lstlisting}
-\subsection{Huffman (compression)}
-Usually used for characters, but usable with everything in which we can count occurrences. \\
-Make a prefix tree we use to decode and we unstack to encode.
-\begin{lstlisting}
-class HuffmanNode implements Comparable<HuffmanNode>
-{
-  public boolean isLeaf;
-  public int occurences;
-  public int charIndex;
-  public HuffmanNode left,right;
-  public HuffmanNode(HuffmanNode left, HuffmanNode right)
-  {
-    this.occurences = left.occurences+right.occurences;
-    this.left = left;
-    this.right = right;
-    isLeaf = false;
-  } 
-  public HuffmanNode(int charIndex, int occurences)
-  {
-    this.charIndex = charIndex;
-    this.occurences = occurences;
-    isLeaf = true;
-  }
-  @Override
-  public int compareTo(HuffmanNode o) {
-    return occurences-o.occurences;
-  }
-}
-HuffmanNode getHuffmanTree(int[] occurences) {
-  PriorityQueue<HuffmanNode> q = new PriorityQueue<HuffmanNode>();
-  for(int i = 0; i < occurences.length; i++)
-    q.add(new HuffmanNode(i, occurences[i]));
-  while(q.size() != 1) {
-    HuffmanNode right = q.poll();
-    HuffmanNode left = q.poll();
-    q.add(new HuffmanNode(left, right));
-  }
-  return q.poll();
-}
-void getHuffmanTable(HuffmanNode tree, BitSet[] result, BitSet current, int pos){
-  if(tree.isLeaf) {
-    BitSet finalBitSet = new BitSet();
-    for(int i = 0; i < pos; i++)
-      finalBitSet.set(i, current.get(pos-i-1));
-    result[tree.charIndex] = finalBitSet;
-  } else {
-    BitSet leftBitSet = new BitSet();
-    leftBitSet.or(current);
-    leftBitSet.set(pos, false);
-    getHuffmanTable(tree.left, result, leftBitSet, pos+1);
-            
-    BitSet rightBitSet = new BitSet();
-    rightBitSet.or(current);
-    rightBitSet.set(pos, true);
-    getHuffmanTable(tree.right, result, rightBitSet, pos+1);
-  }
-}
-    
-//n=occurences.length
-static BitSet[] getHuffmanTable(int n, HuffmanNode tree) {
-  BitSet[] result = new BitSet[n];
-  getHuffmanTable(tree, result, new BitSet(), 0);
-  return result;
-}
-\end{lstlisting}
+% \subsection{Huffman (compression)}
+% Usually used for characters, but usable with everything in which we can count occurrences. \\
+% Make a prefix tree we use to decode and we unstack to encode.
+% \begin{lstlisting}
+% class HuffmanNode implements Comparable<HuffmanNode>
+% {
+%   public boolean isLeaf;
+%   public int occurences;
+%   public int charIndex;
+%   public HuffmanNode left,right;
+%   public HuffmanNode(HuffmanNode left, HuffmanNode right)
+%   {
+%     this.occurences = left.occurences+right.occurences;
+%     this.left = left;
+%     this.right = right;
+%     isLeaf = false;
+%   } 
+%   public HuffmanNode(int charIndex, int occurences)
+%   {
+%     this.charIndex = charIndex;
+%     this.occurences = occurences;
+%     isLeaf = true;
+%   }
+%   @Override
+%   public int compareTo(HuffmanNode o) {
+%     return occurences-o.occurences;
+%   }
+% }
+% HuffmanNode getHuffmanTree(int[] occurences) {
+%   PriorityQueue<HuffmanNode> q = new PriorityQueue<HuffmanNode>();
+%   for(int i = 0; i < occurences.length; i++)
+%     q.add(new HuffmanNode(i, occurences[i]));
+%   while(q.size() != 1) {
+%     HuffmanNode right = q.poll();
+%     HuffmanNode left = q.poll();
+%     q.add(new HuffmanNode(left, right));
+%   }
+%   return q.poll();
+% }
+% void getHuffmanTable(HuffmanNode tree, BitSet[] result, BitSet current, int pos){
+%   if(tree.isLeaf) {
+%     BitSet finalBitSet = new BitSet();
+%     for(int i = 0; i < pos; i++)
+%       finalBitSet.set(i, current.get(pos-i-1));
+%     result[tree.charIndex] = finalBitSet;
+%   } else {
+%     BitSet leftBitSet = new BitSet();
+%     leftBitSet.or(current);
+%     leftBitSet.set(pos, false);
+%     getHuffmanTable(tree.left, result, leftBitSet, pos+1);
+%             
+%     BitSet rightBitSet = new BitSet();
+%     rightBitSet.or(current);
+%     rightBitSet.set(pos, true);
+%     getHuffmanTable(tree.right, result, rightBitSet, pos+1);
+%   }
+% }
+%     
+% //n=occurences.length
+% static BitSet[] getHuffmanTable(int n, HuffmanNode tree) {
+%   BitSet[] result = new BitSet[n];
+%   getHuffmanTable(tree, result, new BitSet(), 0);
+%   return result;
+% }
+% \end{lstlisting}
 \subsection{Union Find}
 \label{unionFind}
 \lstinputlisting{Autre/unionfind.java}

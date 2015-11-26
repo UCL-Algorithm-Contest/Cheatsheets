@@ -20,7 +20,35 @@ $O(n 2^n)$ solution using DP (very simple to code):
 \lstinputlisting{Graphs/mwbmDP.java}
 
 \subsection{Directed Min cost flow}
-Avoiding parallel edges: use preprocess to split nodes. \\
+Avoiding parallel edges:
+\begin{enumerate}
+\item Split nodes
+\begin{center}
+\begin{tikzpicture}
+\node[draw, circle, minimum size = 1cm] (i) at (0, 0) {\tiny $i$};
+\node[draw, circle, minimum size = 1cm] (i1) at (3, 0) {\tiny $2i$};
+\node[draw, circle, minimum size = 1cm] (i2) at (5, 0) {\tiny $2i + 1$};
+\path[->] (i1) edge node[anchor=south] {$t_i$} (i2);
+\end{tikzpicture}
+\end{center}
+where $t_i$ is the number of times node $i$ can be used (usually $\infty$).\\
+
+\item Link nodes
+\begin{center}
+\begin{tikzpicture}
+\node[draw, circle] (i) at (-1, 0) {\tiny $i$};
+\node[draw, circle] (j) at (1, 0) {\tiny $j$};
+\path[->] (i) edge node[anchor=south] {$c_{ij}$} (j);
+\node[draw, circle, minimum size = 1cm] (i1) at (3, 0) {\tiny $2i$};
+\node[draw, circle, minimum size = 1cm] (i2) at (5, 0) {\tiny $2i + 1$};
+\node[draw, circle, minimum size = 1cm] (j1) at (3, -2) {\tiny $2j$};
+\node[draw, circle, minimum size = 1cm] (j2) at (5, -2) {\tiny $2j + 1$};
+\path[->] (i1) edge node[anchor=south] {$t_i$} (i2);
+\path[->] (j1) edge node[anchor=south] {$t_j$} (j2);
+\path[->] (i2) edge node[anchor=east] {$c_{ij}$} (j1);
+\end{tikzpicture}
+\end{center}
+\end{enumerate}
 
 \lstinputlisting{Graphs/transform.java}
 
@@ -113,13 +141,6 @@ Add lower bound $l_e$ to each edge. Constraint becomes
 $$
 l_e \leq f(e) \leq c_e
 $$
-To change into max-flow: (1) define
-$$
-L_v = \sum_{e \textit{ into } v} l_e - \sum_{e \textit{ out of } v} l_e;
-$$
-(2) set demands $d'_v = d_v - L_v$ where $d_v$ are the input demands (usually $0$);
-(3) set $c'_e = c_e - l_e$; (4) solve max flow with node demands $d'_v$ and 
-capacities $c'_e$.
 
 
 \subsection{Chinese Postman Problem}
