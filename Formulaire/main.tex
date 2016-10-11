@@ -2,7 +2,7 @@
 %\usepackage{fontspec}
 \usepackage[utf8]{inputenc}
 %\usepackage[french]{babel}
-%\usepackage[T1]{fontenc}
+\usepackage[T1]{fontenc}
 %\usepackage{lmodern}
 
 \usepackage{amsmath}
@@ -23,6 +23,10 @@
 \usepackage{fancyhdr}
 \usepackage{tikz}
 
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage{sansmath}
+\sansmath
+
 \tikzstyle{vertex}=[circle,fill=gray!50,minimum size=15pt,inner sep=0pt]
 \tikzstyle{visited}=[circle,fill=green!25,minimum size=15pt,inner sep=0pt]
 \tikzstyle{unvisited}=[circle,fill=blue!25,minimum size=15pt,inner sep=0pt]
@@ -40,7 +44,7 @@
 \fancyhf{}
 \renewcommand{\sectionmark}[1]{\markright{#1}}
 \fancyhead[RO]{\textbf{\thepage}}
-\fancyhead[LO]{Université Catholique de Louvain (UCooL and UCooLTwo)}
+\fancyhead[LO]{Université Catholique de Louvain}
 %\fancyhead[RE]{\textsl{\leftmark}}
 \renewcommand{\headrulewidth}{.1em}
 \DeclareMathOperator{\cat}{cat}
@@ -75,12 +79,10 @@
 }
 \setlength{\parindent}{0cm}
 \setlength{\columnseprule}{.1em}
-\author{François Aubry, Guillaume Derval, Benoît Legat, Anthony Gégo}
-\title{Documentation BAPC}
 \begin{document}
 \begin{multicols}{2}
-{\Huge BAPC 2015}\\
-{\Large Teams UCooL and UCooLTwo}\\
+{\Huge BAPC 2016}\\
+{\Large Teams Tortoise + Hare and Algogators}\\
 Authors: François Aubry, Guillaume Derval, Benoît Legat, Anthony Gégo.
 \tableofcontents
 \input{attention.tex}
