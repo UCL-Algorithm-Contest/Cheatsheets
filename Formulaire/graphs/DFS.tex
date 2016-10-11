@@ -10,7 +10,7 @@ void dfs(int u, deque<int> &st) {
     if (vis[u]) return;
     vis[u] = true;
     for (int v : adj[u]) dfs(u);
-    st.push_front(u);
+    st.push_front(u); // no need to reverse after
 }
 
 deque<int> topo;
@@ -18,8 +18,19 @@ for (int u=0; u<n; u++) dfs(u, topo);
 \end{lstlisting}
 
 \subsubsection{Strongly connected components}
-Uses BFS following the topologic order.
-\lstinputlisting{graphs/scc.java}
+Same \lstinline|dfs()| as toposort but takes adjacency list. 
+SCCs are in toposorted order. For the reverse other, switch \lstinline|adj| and \lstinline|adjT|.
+\begin{lstlisting}[language=C++]
+deque<int> topo;
+for (int u=0; u<n; u++) dfs(u, adj, topo);
+vis.reset();
+for (int u : topo) {
+    if (!vis[u]) {
+        deque<int> scc;
+        dfs(u, adjT, scc);
+    }
+}
+\end{lstlisting}
 
 \subsubsection{SCC, Bridges and Articulation Points in C}
 C version of SCC (shorter).
