@@ -27,7 +27,7 @@ Given a list of objects $x[0], \ldots, x[n - 1]$ and an operation $\odot$ with a
 $$ best[i][j] = \min_{i \leq k < j} best[i][k] + best[k + 1][j] + cost(i, j, k)$$
 
 $cost(i, j, k)$ is the cost of $(x[i] {\color{gray} \odot} \cdots {\color{gray} \odot} x[k]) {\color{blue} \mathbf{\odot}} (x[k + 1] {\color{gray} \odot} {\color{gray} \cdots} {\color{gray} \odot} x[j])$.
-\newline
+
 \begin{lstlisting}
 int bestParenthesize() {
   int n = x.length; // x is a global variable

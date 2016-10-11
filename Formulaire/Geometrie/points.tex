@@ -19,6 +19,7 @@ class yComp implements Comparator<Point> {
   }
 }
 \end{lstlisting}
+
 \subsubsection{Point in box}
 \begin{lstlisting}
 boolean inBox(Point p1, Point p2, Point p) {
@@ -26,6 +27,7 @@ boolean inBox(Point p1, Point p2, Point p) {
          Math.min(p1.y, p2.y) <= p.y && p.y <= Math.max(p1.y, p2.y);
 }
 \end{lstlisting}
+
 \subsubsection{Polar sort}
 \begin{lstlisting}
 LinkedList<Point> sortPolar(Point[] P, Point o)
@@ -75,6 +77,7 @@ class PolarCmp implements Comparator<Point> {
   }
 }
 \end{lstlisting}
+
 \subsubsection{Closest pair of points}
 \begin{lstlisting}
 double closestPair(Point[] points) {
@@ -103,6 +106,7 @@ double closestPair(Point[] points) {
   return min;
 }
 \end{lstlisting}
+
 \subsubsection{Orientation}
 $$
 orient(p, q, r) = 
@@ -131,6 +135,7 @@ double orient(Point p, Point q, Point r) {
   return q.x * r.y - r.x * q.y - p.x * (r.y - q.y) + p.y * (r.x - q.x);
 }
 \end{lstlisting}
+
 \subsubsection{Angle visibility}
 $x$ lies strictly inside the angle formed by $p, q, r$ iff
 \begin{align*}
@@ -138,6 +143,7 @@ sgn(orient(p, q, x)) & = sgn(orient(p, x, r)) \\
 sgn(orient(p, r, x)) & = sgn(orient(p, x, q)) \\
 \end{align*}
 To allow it to lie on the border simply check if $$sgn(orient(p, q, x)) = 0 \text{ or } sgn(orient(p, r, x)) = 0$$
+
 \subsubsection{Fixed radius neighbors (1D)}
 \begin{lstlisting}
 List<Double[]> findPairs1D(double[] x, double r) {
@@ -171,6 +177,7 @@ List<Double[]> findPairs1D(double[] x, double r) {
   return pairs;
 }
 \end{lstlisting}
+
 \subsubsection{Fixed radius neighbors (2D)}
 \begin{lstlisting}
 List<Point[]> findPairs2D(Point[] points, double r) {

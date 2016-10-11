@@ -1,7 +1,7 @@
 \subsection{Bottom-up}
 Give n objects of value $v[i]$ to 3 people such that $\max_i V_i - \min_i V_i$ is minimum ($V_i$ is total value for person $i$).
 
-$canDo[i][v_1][v_2]$ =  1 if we can give the objects $0, 1, \ldots, i$ such that $v_1$ is going to $P_1$ and $v_2$ to $P_2$, 0 otherwise. $v_3$ is determined from the sum.
+$canDo[i][v_1][v_2]$ =  1 if we can give the objects $0, 1, \ldots, i$ such that $v_1$ is going to $P_1$ and $v_2$ to $P_2$, 0 otherwise. $v_3$ is determined from the sum. \\
 
 \begin{minipage}{0.25\textwidth}
 \textbf{Base case $i = 0$:}
@@ -18,7 +18,7 @@ $ canDo[i][v_1][v_2] =  \\\text{\ \ }canDo[i - 1][v_1][v_2] \vee \\  \text{\ \ }
 \end{minipage}
 \newline
 \textbf{Sol. :} $ \min_{v_1, v_2 : canDo[n - 1][v_1][v_2]} \quad [max(v_1, v_2, S - v_1 - v_2) - min(v_1, v_2, S - v_1 - v_2)]$
-\newline
+
 \begin{lstlisting}
 int solveDP() {
   boolean[][][] canDo = new boolean[v.length][sum + 1][sum + 1];

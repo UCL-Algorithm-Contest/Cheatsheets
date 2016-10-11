@@ -81,6 +81,7 @@ void subsets(int[] set) {
   }
 }
 \end{lstlisting}
+
 \subsection{Decomposition in unit fractions {\footnotesize \textit{untested}}}
 Write $0<\frac{p}{q}<1$ as a sum of $\frac{1}{k}$
 \begin{lstlisting}
@@ -92,6 +93,7 @@ void expandUnitFrac(long p, long q) {
 	}
 }
 \end{lstlisting}
+
 \subsection{Combination}
 Number of combinations of $k$ elements within $n$ ones ($C^k_n$)
 
@@ -107,6 +109,7 @@ long C(int n, int k) {
   return Math.round(r);
 }
 \end{lstlisting}
+
 \subsubsection{Catalan numbers}
 $\cat(n) = \frac{C_n^{2n}}{n+1}$ $\cat(n+1) = \frac{(2n+2)(2n+1)}{(n+2)(n+1)}\cat(n)$
 \begin{itemize}
@@ -116,8 +119,6 @@ $\cat(n) = \frac{C_n^{2n}}{n+1}$ $\cat(n+1) = \frac{(2n+2)(2n+1)}{(n+2)(n+1)}\ca
   \item triangulate a convex polygon of $n+2$ sides.
   \item number of monotonic paths along the edge of a $n\times n$ grid which do not pass above de diagonal.
 \end{itemize}
-
-\vspace{0.5cm}
 
 Compute all Catalan number $\leq n$
 \begin{lstlisting}
@@ -146,6 +147,7 @@ $$\begin{pmatrix}
 f_{n+1} & f_n\\
 f_n & f_{n-1}
 \end{pmatrix}$$
+
 \subsection{Cycle finding}
 \begin{lstlisting}
 int[] floydCycleFinding (int x0) {
@@ -162,6 +164,7 @@ int[] floydCycleFinding (int x0) {
   return new int[] {mu, lambda};
 }
 \end{lstlisting}
+
 \subsection{Number theory}
 \subsubsection{Misc}
 \[
@@ -211,6 +214,7 @@ static int extendedEuclid(int a, int b) {
   return d;
 }
 \end{lstlisting}
+
 \subsubsection{Chinese remainder theorem}
 \begin{lstlisting}
 static long[] chinese (long[] b, long[] m) {
@@ -348,7 +352,7 @@ double[] gaussElim(double[][] A, double[] b) {
 
 \subsection{Ternary Search}
 
-Find minimum of unimodal function. \\
+Find minimum of unimodal function.
 
 \begin{lstlisting}
 double ternarySearch(double left, double right) {
@@ -367,7 +371,7 @@ double ternarySearch(double left, double right) {
 
 \subsection{Integration}
 
-Compute integral. \\
+Compute integral.
 
 \begin{lstlisting}
 double integral(double a, double b) {
