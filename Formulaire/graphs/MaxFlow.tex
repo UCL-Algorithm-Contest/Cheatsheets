@@ -1,60 +1,35 @@
 \subsection{Directed Max flow}
 \subsubsection{Edmonds-Karps (BFS)}
-Path in residual graph searched via BFS. $O(|V||E|^2)$.\\
-\lstinputlisting{Graphs/edmondskarps.java}
+Path in residual graph searched via BFS. $O(|V||E|^2)$.
+\lstinputlisting{graphs/edmondskarps.java}
+
 \subsubsection{Ford-Fulkerson}
 Equals to Edmonds-Karps, but with a DFS. $O(|E|f^*)=O(|V||E|^2)$ where $f^*$ is the value of the max flow.
-\lstinputlisting{Graphs/fordfulkerson.java}
+\lstinputlisting{graphs/fordfulkerson.java}
+
 \subsubsection{Min cut}
-We search, between two nodes $s$ and $t$, subsets of nodes $V_1$ and $V_2$ so as $s\in V_1$, $t\in V_2$ and $\sum_{e \in E(V_1, V_2)} w(e)$ minimum.\\
+We search, between two nodes $s$ and $t$, subsets of nodes $V_1$ and $V_2$ so as $s\in V_1$, $t\in V_2$ and $\sum_{e \in E(V_1, V_2)} w(e)$ minimum.
+
 We just have to compute the max-flow between $s$ and $t$ and to apply a BFS/DFS on the residual graph. All node which are visited are in $V_1$, others in $V_2$. The weight from the cut is the max-flow.
+
 \subsubsection{Maximum number of disjoint paths} 
 For edge disjoint paths just compute the max flow with unit capacities. For vertex disjoint paths split vertices into two with unit capacity edge between them.
+
 \subsubsection{Maximum weighted bipartite matching}
 Assignment problem: Given a set of $n$ persons and $n$ jobs, and a cost matrix $M$, assign a job to each person such that the sum of the costs is minimized. It also works for $n$ persons and $m$ jobs with $n \neq m$. Just fill make a square matrix using dummy values. Can also be solve with min cost max flow but it is slower. \\
 
 $O(n^3)$ solution:
-\lstinputlisting{Graphs/mwbm.java}
+\lstinputlisting{graphs/mwbm.java}
 \vspace{0.5cm}
 $O(n 2^n)$ solution using DP (very simple to code):
-\lstinputlisting{Graphs/mwbmDP.java}
+\lstinputlisting{graphs/mwbmDP.java}
 
 \subsection{Directed Min cost flow}
-Avoiding parallel edges:
-\begin{enumerate}
-\item Split nodes
-\begin{center}
-\begin{tikzpicture}
-\node[draw, circle, minimum size = 1cm] (i) at (0, 0) {\tiny $i$};
-\node[draw, circle, minimum size = 1cm] (i1) at (3, 0) {\tiny $2i$};
-\node[draw, circle, minimum size = 1cm] (i2) at (5, 0) {\tiny $2i + 1$};
-\path[->] (i1) edge node[anchor=south] {$t_i$} (i2);
-\end{tikzpicture}
-\end{center}
-where $t_i$ is the number of times node $i$ can be used (usually $\infty$).\\
+Avoiding parallel edges: use preprocess to split nodes.
+\lstinputlisting{graphs/transform.java}
 
-\item Link nodes
-\begin{center}
-\begin{tikzpicture}
-\node[draw, circle] (i) at (-1, 0) {\tiny $i$};
-\node[draw, circle] (j) at (1, 0) {\tiny $j$};
-\path[->] (i) edge node[anchor=south] {$c_{ij}$} (j);
-\node[draw, circle, minimum size = 1cm] (i1) at (3, 0) {\tiny $2i$};
-\node[draw, circle, minimum size = 1cm] (i2) at (5, 0) {\tiny $2i + 1$};
-\node[draw, circle, minimum size = 1cm] (j1) at (3, -2) {\tiny $2j$};
-\node[draw, circle, minimum size = 1cm] (j2) at (5, -2) {\tiny $2j + 1$};
-\path[->] (i1) edge node[anchor=south] {$t_i$} (i2);
-\path[->] (j1) edge node[anchor=south] {$t_j$} (j2);
-\path[->] (i2) edge node[anchor=east] {$c_{ij}$} (j1);
-\end{tikzpicture}
-\end{center}
-\end{enumerate}
-
-\lstinputlisting{Graphs/transform.java}
-
-Min cost flow analogous to max flow but using Bellman-Ford to find paths (can be made faster using Dijkstra by chaining costs).\\
-
-\lstinputlisting{Graphs/mincostflow.java}
+Min cost flow analogous to max flow but using Bellman-Ford to find paths (can be made faster using Dijkstra by chaining costs).
+\lstinputlisting{graphs/mincostflow.java}
 
 Some changes to SPFA may be necessary. Computation of global variable $p$ containing parents is required.
 
@@ -141,6 +116,13 @@ Add lower bound $l_e$ to each edge. Constraint becomes
 $$
 l_e \leq f(e) \leq c_e
 $$
+To change into max-flow: (1) define
+$$
+L_v = \sum_{e \textit{ into } v} l_e - \sum_{e \textit{ out of } v} l_e;
+$$
+(2) set demands $d'_v = d_v - L_v$ where $d_v$ are the input demands (usually $0$);
+(3) set $c'_e = c_e - l_e$; (4) solve max flow with node demands $d'_v$ and 
+capacities $c'_e$.
 
 
 \subsection{Chinese Postman Problem}
